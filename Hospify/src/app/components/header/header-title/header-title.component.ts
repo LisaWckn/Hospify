@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrl: './header-title.component.css'
 })
 export class HeaderTitleComponent {
-
+  title = "Hos"
+  title2 = "pify"
 }
