@@ -1,0 +1,11 @@
+.logo-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.title {
+  font-family: adlam, serif;
+  font-size: 75px;
+  margin-top: 0;
+  margin-left: 12px;
+}
