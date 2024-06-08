@@ -4,6 +4,7 @@
 }
 
 .title {
+  vertical-align: bottom;
   font-family: adlam, serif;
   font-size: 75px;
   margin-top: 0;
