@@ -5,5 +5,5 @@
   src: url(assets/fonts/ADLaM_Display/ADLaMDisplay-Regular.ttf) format("opentype");
 }
 
-html, body { height: 100%; }
+html, body { height: 100%; background-color: #def8fd }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
