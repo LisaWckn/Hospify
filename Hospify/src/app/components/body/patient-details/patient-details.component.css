@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+}
+
+.card {
+    padding: 24px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: none;
+}
+
+.patient-information {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.patient-details-title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.button {
+  flex-grow: 1;
+  background-color: #4395BB;
+  border: 0;
+  border-radius: 16px;
+  padding: 16px 8px;
+  color: #def8fd;
+  font-size: medium;
+}

@@ -138,7 +138,7 @@
       "geburtsdatum": "1986-03-05",
       "adresse": "Braunweg 11, 67890 Braunstadt",
       "kontakttelefon": "+491234567898",
-      "verstorben": false,
+      "verstorben": true,
       "krankenversicherungsnummer": "2109876543",
       "gewicht": 68,
       "krankenkassenstatus": "versichert"
@@ -324,6 +324,68 @@
       "krankenversicherungsnummer": "8765432109",
       "gewicht": 64,
       "krankenkassenstatus": "versichert"
+    }
+  ],
+  "befunde": [
+    {
+      "befundID": 1,
+      "latName": "Diabetes mellitus",
+      "beschreibung": "Eine Stoffwechselkrankheit, die durch Insulinmangel oder -resistenz verursacht wird.",
+      "chronisch": true
+    },
+    {
+      "befundID": 2,
+      "latName": "Hypertensio arterialis",
+      "beschreibung": "Eine chronische Erkrankung, die durch hohen Blutdruck gekennzeichnet ist.",
+      "chronisch": true
+    },
+    {
+      "befundID": 3,
+      "latName": "Appendicitis",
+      "beschreibung": "Eine akute Entzündung des Wurmfortsatzes des Blinddarms.",
+      "chronisch": false
+    },
+    {
+      "befundID": 4,
+      "latName": "Asthma bronchiale",
+      "beschreibung": "Eine chronische entzündliche Erkrankung der Atemwege.",
+      "chronisch": true
+    },
+    {
+      "befundID": 5,
+      "latName": "Gastritis",
+      "beschreibung": "Entzündung der Magenschleimhaut.",
+      "chronisch": false
+    },
+    {
+      "befundID": 6,
+      "latName": "Arthrosis",
+      "beschreibung": "Degenerative Gelenkerkrankung, die vor allem die Gelenkknorpel betrifft.",
+      "chronisch": true
+    },
+    {
+      "befundID": 7,
+      "latName": "Pneumonia",
+      "beschreibung": "Entzündung des Lungengewebes.",
+      "chronisch": false
+    },
+    {
+      "befundID": 8,
+      "latName": "Migraine",
+      "beschreibung": "Chronische Kopfschmerzerkrankung, die oft mit Übelkeit und Lichtempfindlichkeit einhergeht.",
+      "chronisch": true
+    },
+    {
+      "befundID": 9,
+      "latName": "Otitis media",
+      "beschreibung": "Mittelohrentzündung, die akut oder chronisch sein kann.",
+      "chronisch": false
+    },
+    {
+      "befundID": 10,
+      "latName": "Psoriasis",
+      "beschreibung": "Chronische Hauterkrankung, die sich durch rote, schuppige Flecken äußert.",
+      "chronisch": true
     }
   ]
 }

@@ -19,6 +19,9 @@ import {
   MatTable
 } from "@angular/material/table";
 import { PatientDetailsComponent } from './components/body/patient-details/patient-details.component';
+import { IconTextComponent } from './components/icon-text/icon-text.component';
+import {MatIcon} from "@angular/material/icon";
+import { DiagnosticFindingComponent } from './components/body/diagnostic-finding/diagnostic-finding.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,9 @@ import { PatientDetailsComponent } from './components/body/patient-details/patie
     HeaderLinesComponent,
     HeaderTitleComponent,
     PatientsListComponent,
-    PatientDetailsComponent
+    PatientDetailsComponent,
+    IconTextComponent,
+    DiagnosticFindingComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +46,8 @@ import { PatientDetailsComponent } from './components/body/patient-details/patie
     MatRowDef,
     MatHeaderRowDef,
     MatCellDef,
-    MatHeaderCellDef
+    MatHeaderCellDef,
+    MatIcon
   ],
   providers: [
     provideAnimationsAsync()

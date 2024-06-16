@@ -1,9 +1,6 @@
 :host {
   flex-grow: 1;
   display: flex;
-  border-radius: 16px;
-
-  color: black;
 }
 
 .list-card {
@@ -15,7 +12,6 @@
   border-radius: 16px;
   box-shadow: none;
 }
-
 
 table {
   width: 100%;
