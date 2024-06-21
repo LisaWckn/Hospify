@@ -34,3 +34,7 @@
   color: #def8fd;
   font-size: medium;
 }
+
+.button:hover {
+  background-color: #3e88a8;
+}

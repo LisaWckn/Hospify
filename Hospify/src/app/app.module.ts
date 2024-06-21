@@ -23,9 +23,13 @@ import { IconTextComponent } from './components/icon-text/icon-text.component';
 import {MatIcon} from "@angular/material/icon";
 import { DiagnosticFindingComponent } from './components/body/diagnostic-finding/diagnostic-finding.component';
 import {MatIconButton} from "@angular/material/button";
-import { AddPatientComponent } from './components/body/add-patient/add-patient.component';
+import { AddPatientComponent } from './components/body/admitting-patient/add-patient/add-patient.component';
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {FormsModule} from "@angular/forms";
+import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
+import {MatOption, MatSelect} from "@angular/material/select";
+import { AdmittingExistingPatientComponent } from './components/body/admitting-patient/admitting-existing-patient/admitting-existing-patient.component';
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -36,7 +40,8 @@ import {FormsModule} from "@angular/forms";
     PatientDetailsComponent,
     IconTextComponent,
     DiagnosticFindingComponent,
-    AddPatientComponent
+    AddPatientComponent,
+    AdmittingExistingPatientComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +61,12 @@ import {FormsModule} from "@angular/forms";
     MatIconButton,
     MatButtonToggleGroup,
     MatButtonToggle,
-    FormsModule
+    FormsModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatFormFieldModule,
+    MatCheckbox
   ],
   providers: [
     provideAnimationsAsync()

@@ -10,8 +10,7 @@
 
     <h1 class="title">Neuer Patient</h1>
   </div>
-  <div *ngIf="!newPatient">
-
-    <h1 class="title">Bestehender Patient</h1>
+  <div *ngIf="!newPatient" style="height: 100%">
+    <app-admitting-existing-patient/>
   </div>
 </mat-card>
