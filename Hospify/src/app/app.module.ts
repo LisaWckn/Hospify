@@ -22,6 +22,10 @@ import { PatientDetailsComponent } from './components/body/patient-details/patie
 import { IconTextComponent } from './components/icon-text/icon-text.component';
 import {MatIcon} from "@angular/material/icon";
 import { DiagnosticFindingComponent } from './components/body/diagnostic-finding/diagnostic-finding.component';
+import {MatIconButton} from "@angular/material/button";
+import { AddPatientComponent } from './components/body/add-patient/add-patient.component';
+import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -31,7 +35,8 @@ import { DiagnosticFindingComponent } from './components/body/diagnostic-finding
     PatientsListComponent,
     PatientDetailsComponent,
     IconTextComponent,
-    DiagnosticFindingComponent
+    DiagnosticFindingComponent,
+    AddPatientComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,11 @@ import { DiagnosticFindingComponent } from './components/body/diagnostic-finding
     MatHeaderRowDef,
     MatCellDef,
     MatHeaderCellDef,
-    MatIcon
+    MatIcon,
+    MatIconButton,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    FormsModule
   ],
   providers: [
     provideAnimationsAsync()

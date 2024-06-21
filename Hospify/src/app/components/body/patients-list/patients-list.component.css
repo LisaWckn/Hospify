@@ -3,7 +3,23 @@
   display: flex;
 }
 
-.list-card {
+.patient-details-title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.icon-button {
+  background-color: white; /* Dein gewünschter Hex-Wert */
+  color: #4395BB; /* Farbe des Icons */
+}
+
+/* Optional: Falls du den Hover-Effekt ebenfalls anpassen möchtest */
+.icon-button:hover {
+  background-color: #def8fd; /* Ein etwas dunklerer Hex-Wert */
+}
+
+.card {
   margin: 24px;
   padding: 24px;
   width: 100%;

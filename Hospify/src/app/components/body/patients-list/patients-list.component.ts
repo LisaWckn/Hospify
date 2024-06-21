@@ -17,4 +17,8 @@ export class PatientsListComponent {
   clickRow(row: any) {
     this.router.navigate(["patient/", row.patientenID]);
   }
+
+  clickAddPatientButton() {
+    this.router.navigate(["add-patient"]);
+  }
 }
