@@ -29,7 +29,7 @@ import {FormsModule} from "@angular/forms";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import { AdmittingExistingPatientComponent } from './components/body/admitting-patient/admitting-existing-patient/admitting-existing-patient.component';
-import {MatCheckbox} from "@angular/material/checkbox";
+import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -66,7 +66,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatSelect,
     MatOption,
     MatFormFieldModule,
-    MatCheckbox
+    MatCheckboxModule
   ],
   providers: [
     provideAnimationsAsync()

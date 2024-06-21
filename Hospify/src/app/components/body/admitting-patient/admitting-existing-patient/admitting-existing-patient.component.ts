@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+import {Location} from '@angular/common';
+
 import {Patient} from "../../../../models/patient";
 import {DummyMethods} from "../../../../services/dummyMethods";
 import {Abteilung} from "../../../../models/abteilung";
+import {Ausstattung} from "../../../../models/ausstattung";
+import {Bett} from "../../../../models/bett";
 
 @Component({
   selector: 'app-admitting-existing-patient',
@@ -14,9 +18,28 @@ export class AdmittingExistingPatientComponent {
   departments: Abteilung[] = DummyMethods.getAllDepartments();
   selectedDepartmentID: number = 0;
 
+  equipment: Ausstattung = {beatmungsgeraet: false, iv_drip: false, herzmonitor:false, extragross:false}
   bedFound : boolean = false;
+  bed: Bett|undefined;
+  errorMessage = false;
+
+  constructor(private location: Location) {}
 
   findFreeBed() {
+    this.bed = DummyMethods.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
 
+    if(this.bed == undefined){
+      this.errorMessage = true;
+    }else{
+      this.bedFound = true;
+      this.errorMessage = false;
+    }
+  }
+
+  admitPatient(){
+    DummyMethods.addStayForPatient(this.selectedPatientID);
+    DummyMethods.addBedForPatient(this.selectedPatientID, this.bed!.bettID);
+
+    this.location.back();
   }
 }

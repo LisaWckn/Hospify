@@ -12,7 +12,7 @@
 
     <h3>Wähle die Abteilung:</h3>
     <mat-form-field>
-      <mat-label>Patient</mat-label>
+      <mat-label>Abteilung</mat-label>
       <mat-select [(value)]="selectedDepartmentID">
         @for (department of departments; track department) {
           <mat-option [value]="department.abteilungsID">{{department.abteilungsID}}</mat-option>
@@ -25,15 +25,16 @@
     <h2 class="title">Bett</h2>
     <div *ngIf="!bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
       <h3 style="margin: 0">Anforderungen:</h3>
-      <mat-checkbox class="checkbox">Beatmungsgerät</mat-checkbox>
-      <mat-checkbox>IV Drip</mat-checkbox>
-      <mat-checkbox>Herzmonitor</mat-checkbox>
-      <mat-checkbox>Extragross</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.beatmungsgeraet">Beatmungsgerät</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.iv_drip">IV Drip</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.herzmonitor">Herzmonitor</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.extragross">Extragross</mat-checkbox>
 
       <button class="button" style="margin-top: 24px" (click)="findFreeBed()">Freies Bett finden</button>
+      <p *ngIf="errorMessage" class="error">Kein freies Bett mit diesen Anforderungen verfügbar!</p>
     </div>
   </div>
 
 </div>
 
-<button *ngIf="bedFound" class="button">Patient aufnehmen</button>
+<button *ngIf="bedFound" class="button" (click)="admitPatient()">Patient aufnehmen</button>

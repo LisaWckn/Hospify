@@ -24,8 +24,10 @@
   background-color: #3e88a8;
 }
 
-
-.mat-checkbox-checked.mat-accent .mat-checkbox-background,
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
-  background-color: black;
+.error {
+  color: red;
+  width: 100%;
+  text-align: center;
+  margin: 8px 0;
+  font-size: small;
 }
