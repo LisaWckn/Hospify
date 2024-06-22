@@ -1,17 +1,25 @@
-<div style="display: flex; flex-direction: row">
+<div style="display: flex; flex-direction: row; gap: 48px">
   <div style="width: 50%">
-    <h3>Wähle einen Patienten für die Aufnahme:</h3>
-    <mat-form-field >
+    <h2 class="title">Patient</h2>
+    <mat-form-field style="width: 100%; margin-top: 12px">
       <mat-label>Patient</mat-label>
-      <mat-select [(value)]="selectedPatientID">
+      <mat-select [(value)]="selectedPatient">
         @for (patient of patients; track patient) {
-          <mat-option [value]="patient.patientenID">{{patient.name}}</mat-option>
+          <mat-option [value]="patient">{{patient.name}}</mat-option>
         }
       </mat-select>
     </mat-form-field>
 
-    <h3>Wähle die Abteilung:</h3>
-    <mat-form-field>
+    <h5 style="margin-top: 0">Geburtsdatum:</h5>
+    <p>{{selectedPatient.geburtsdatum}}</p>
+
+    <h5 style="margin-top: 0">Krankenversicherungsnummer:</h5>
+    <p>{{selectedPatient.krankenversicherungsnummer}}</p>
+  </div>
+
+  <div style="width: 50%;">
+    <h2 class="title">Abteilung</h2>
+    <mat-form-field style="width: 100%; margin-top: 12px">
       <mat-label>Abteilung</mat-label>
       <mat-select [(value)]="selectedDepartmentID">
         @for (department of departments; track department) {
@@ -19,9 +27,7 @@
         }
       </mat-select>
     </mat-form-field>
-  </div>
 
-  <div style="width: 50%;">
     <h2 class="title">Bett</h2>
     <div *ngIf="!bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
       <h3 style="margin: 0">Anforderungen:</h3>

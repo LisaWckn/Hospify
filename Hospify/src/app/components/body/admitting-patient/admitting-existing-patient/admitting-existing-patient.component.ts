@@ -14,7 +14,7 @@ import {Bett} from "../../../../models/bett";
 })
 export class AdmittingExistingPatientComponent {
   patients : Patient[] = DummyMethods.getAllPatients();
-  selectedPatientID : number = 1;
+  selectedPatient : Patient = this.patients[0];
   departments: Abteilung[] = DummyMethods.getAllDepartments();
   selectedDepartmentID: number = 0;
 
@@ -37,8 +37,8 @@ export class AdmittingExistingPatientComponent {
   }
 
   admitPatient(){
-    DummyMethods.addStayForPatient(this.selectedPatientID);
-    DummyMethods.addBedForPatient(this.selectedPatientID, this.bed!.bettID);
+    DummyMethods.addStayForPatient(this.selectedPatient.patientenID!);
+    DummyMethods.addBedForPatient(this.selectedPatient.patientenID!, this.bed!.bettID);
 
     this.location.back();
   }
