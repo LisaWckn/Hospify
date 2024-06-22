@@ -1,5 +1,5 @@
 export interface Patient {
-  patientenID: number;
+  patientenID?: number;
   name: string;
   geschlecht: string;
   blutgruppe: string;

@@ -30,6 +30,10 @@ import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import { AdmittingExistingPatientComponent } from './components/body/admitting-patient/admitting-existing-patient/admitting-existing-patient.component';
 import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
+import { AdmittingNewPatientComponent } from './components/body/admitting-patient/admitting-new-patient/admitting-new-patient.component';
+import {MatInput, MatInputModule} from "@angular/material/input";
+import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 
 @NgModule({
   declarations: [
@@ -41,7 +45,8 @@ import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
     IconTextComponent,
     DiagnosticFindingComponent,
     AddPatientComponent,
-    AdmittingExistingPatientComponent
+    AdmittingExistingPatientComponent,
+    AdmittingNewPatientComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +71,14 @@ import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
     MatSelect,
     MatOption,
     MatFormFieldModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatInput,
+    MatInputModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDatepickerInput
   ],
   providers: [
     provideAnimationsAsync()

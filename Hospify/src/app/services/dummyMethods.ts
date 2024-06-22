@@ -5,6 +5,7 @@ import {Stay} from "../models/stay";
 import {Abteilung} from "../models/abteilung";
 import {Ausstattung} from "../models/ausstattung";
 import {Bett} from "../models/bett";
+import {Ort} from "../models/ort";
 
 export class DummyMethods {
 
@@ -16,6 +17,12 @@ export class DummyMethods {
 
   static getAllAlivePatients() : Array<Patient> {
     return dummyData.patients;
+  }
+
+  static addPatient(patient: Patient): number {
+    //TODO: Insert Patient and return generated id
+    //Default return value is -1, if insert fails
+    return -1;
   }
 
   static getPatientByID(patientID: number) : Patient{
@@ -44,6 +51,19 @@ export class DummyMethods {
   }
 
   static addBedForPatient(patientID: number, bettId: number){
+    //TODO
+  }
+
+  static findPlace(plz: string): boolean {
+    //Return true if Location exists, else return false
+    return true;
+  }
+
+  static createPlace(ort: Ort) {
+    //TODO insert Ort
+  }
+
+  static addPlaceToPatient(patientID: number, plz: string){
     //TODO
   }
 }
