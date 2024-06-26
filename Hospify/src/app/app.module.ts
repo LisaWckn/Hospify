@@ -34,6 +34,7 @@ import { AdmittingNewPatientComponent } from './components/body/admitting-patien
 import {MatInput, MatInputModule} from "@angular/material/input";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
     MatRadioButton,
     MatDatepickerToggle,
     MatDatepicker,
-    MatDatepickerInput
+    MatDatepickerInput,
+    HttpClientModule
   ],
   providers: [
     provideAnimationsAsync()
