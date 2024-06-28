@@ -7,7 +7,7 @@
       <app-icon-text [title]="'Geburtsdatum:'" [text]="patient.geburtsdatum"/>
       <app-icon-text [title]="'Geschlecht:'" [text]="patient.geschlecht"/>
       <app-icon-text [title]="'Blutgruppe:'" [text]="patient.blutgruppe"/>
-      <app-icon-text [title]="'Gewicht:'" [text]="patient.gewicht.toString()"/>
+      <app-icon-text [title]="'Gewicht:'" [text]="String(patient.gewicht) + ' kg'"/>
       <app-icon-text [title]="'Krankenversicherungsnummer:'" [text]="patient.krankenversicherungsnummer"/>
       <app-icon-text [title]="'Krankenkassenstatus:'" [text]="patient.krankenkassenstatus"/>
       <app-icon-text [title]="'Verstorben:'" [text]="'Patient verstorben'" *ngIf="patient.verstorben"/>
@@ -25,8 +25,8 @@
     <mat-card class="card" style="height: 25%">
       <div>
         <h1 class="patient-details-title">Aktueller Aufenthalt</h1>
-        <app-icon-text [title]="'Startzeitpunkt:'" [text]="currentStay.startzeitpunkt.toLocaleDateString()"/>
-        <app-icon-text *ngIf="currentStay.endzeitpunkt" [title]="'Endzeitpunkt:'" [text]="currentStay.endzeitpunkt!.toLocaleDateString()"/>
+        <app-icon-text [title]="'Startzeitpunkt:'" [text]="String(currentStay.startzeitpunkt)"/>
+        <app-icon-text *ngIf="currentStay.endzeitpunkt" [title]="'Endzeitpunkt:'" [text]="String(currentStay.endzeitpunkt!)"/>
       </div>
     </mat-card>
   </div>

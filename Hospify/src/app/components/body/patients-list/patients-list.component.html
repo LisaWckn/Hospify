@@ -1,11 +1,12 @@
 <mat-card class="card">
   <div style="display: flex; flex-direction: row; justify-content: space-between">
-    <h1 class="patient-details-title">Patienten</h1>
+    <h1 class="patient-details-title">Patienten im Haus</h1>
     <button mat-icon-button class="icon-button" (click)="clickAddPatientButton()">
       <mat-icon class="material-icons">add</mat-icon>
     </button>
   </div>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <div *ngIf="loading">Loading...</div>
+  <table *ngIf="!loading" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->

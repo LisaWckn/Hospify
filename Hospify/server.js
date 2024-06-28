@@ -1,7 +1,14 @@
 const oracledb = require('oracledb');
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const app = express();
 const port = 3000;
+
+app.use(cors());
+app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(bodyParser.json());
 
 const dbConfig = {
   user: 'ndreier',
@@ -11,12 +18,17 @@ const dbConfig = {
 
 oracledb.initOracleClient({ libDir: 'C:\\oracle\\instantclient_23_4' });
 
-app.get('/data', async (req, res) => {
+app.post('/query', async (req, res) => {
   let connection;
 
   try {
+    const query = req.body.query;
+    if (!query) {
+      return res.status(400).send('Query string is required');
+    }
+
     connection = await oracledb.getConnection(dbConfig);
-    const result = await connection.execute('SELECT name FROM MITARBEITER');
+    const result = await connection.execute(query);
     res.json(result.rows);
   } catch (err) {
     console.error(err);

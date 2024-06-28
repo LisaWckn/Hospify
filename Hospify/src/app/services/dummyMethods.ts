@@ -9,29 +9,16 @@ import {Ort} from "../models/ort";
 
 export class DummyMethods {
 
-  static emptyPatient: Patient = {patientenID: -1, name: "", geschlecht: "", blutgruppe: "", geburtsdatum: "", adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
+  static emptyPatient: Patient = {patientenID: -1, plz:0, name: "", geschlecht: "", blutgruppe: "", geburtsdatum: "", adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
 
   static getAllPatients() : Array<Patient> {
-    return dummyData.patients;
-  }
-
-  static getAllAlivePatients() : Array<Patient> {
-    return dummyData.patients;
+    return [DummyMethods.emptyPatient];
   }
 
   static addPatient(patient: Patient): number {
     //TODO: Insert Patient and return generated id
     //Default return value is -1, if insert fails
     return -1;
-  }
-
-  static getPatientByID(patientID: number) : Patient{
-    let patient = dummyData.patients.find(p => p.patientenID == patientID);
-    return patient != undefined ? patient : DummyMethods.emptyPatient;
-  }
-
-  static getAllDiagnosticFindingsByPatientID(patientID: number): DiagnosticFindings[] {
-    return dummyData.befunde.slice(0, 3);
   }
 
   static getCurrentStayByPatientID(patientID: number) : Stay{

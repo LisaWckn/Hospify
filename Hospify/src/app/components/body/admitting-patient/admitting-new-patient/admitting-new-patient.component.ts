@@ -18,7 +18,7 @@ import {Ort} from "../../../../models/ort";
 export class AdmittingNewPatientComponent {
   bloodtypes : string[] = ["unbekannt","0-", "0+", "A-", "A+", "B-", "B+", "AB-", "AB+"];
 
-  newPatient: Patient = {name: "", geschlecht: "", blutgruppe: "unbekannt", geburtsdatum: "", adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
+  newPatient: Patient = {name: "",plz:0, geschlecht: "", blutgruppe: "unbekannt", geburtsdatum: "", adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
   street = "";
   houseNumber = 0;
   place: Ort = {plz:"", ort:""};
