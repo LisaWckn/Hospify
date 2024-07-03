@@ -2,9 +2,9 @@
   <mat-card class="card" style="width: 60%">
     <div>
       <h1 class="patient-details-title">{{ patient.name }}</h1>
-      <app-icon-text style="background-color: #eaffcc" [title]="'Adresse:'" [text]="patient.adresse"/>
+      <app-icon-text [title]="'Adresse:'" [text]="patient.adresse"/>
       <app-icon-text [title]="'Kontakttelefon:'" [text]="patient.kontakttelefon"/>
-      <app-icon-text [title]="'Geburtsdatum:'" [text]="patient.geburtsdatum"/>
+      <app-icon-text [title]="'Geburtsdatum:'" [text]="patient.geburtsdatum.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'})"/>
       <app-icon-text [title]="'Geschlecht:'" [text]="patient.geschlecht"/>
       <app-icon-text [title]="'Blutgruppe:'" [text]="patient.blutgruppe"/>
       <app-icon-text [title]="'Gewicht:'" [text]="String(patient.gewicht) + ' kg'"/>
@@ -14,7 +14,7 @@
     </div>
   </mat-card>
   <div style="width: 40%; display: flex; flex-direction: column; gap: 24px">
-    <mat-card class="card" style="height: 75%; overflow-y: scroll">
+    <mat-card class="card" style="height: 70%; overflow-y: scroll">
       <div>
         <h1 class="patient-details-title">Diagnose</h1>
         <section *ngFor="let diagFind of diagnosticFindings">
@@ -22,21 +22,56 @@
         </section>
       </div>
     </mat-card>
-    <mat-card class="card" style="height: 25%">
+    <mat-card class="card" style="height: 30%">
       <div>
-        <h1 class="patient-details-title">Aktueller Aufenthalt</h1>
-        <app-icon-text [title]="'Startzeitpunkt:'" [text]="String(currentStay.startzeitpunkt)"/>
+        <div style="display: flex; flex-direction: row; justify-content: space-between">
+          <h1 class="patient-details-title">Aktueller Aufenthalt</h1>
+          <button mat-icon-button class="icon-button" (click)="openEntlassenDialog()">
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+
+        <app-icon-text [title]="'Startzeitpunkt:'" [text]="currentStay.startzeitpunkt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'}) + ' ' +currentStay.startzeitpunkt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + ' Uhr'"/>
         <app-icon-text *ngIf="currentStay.endzeitpunkt" [title]="'Endzeitpunkt:'" [text]="String(currentStay.endzeitpunkt!)"/>
       </div>
     </mat-card>
   </div>
 </div>
-<div  class="patient-information">
-  <mat-card class="card" style="width: 100%">
-    <div style="display: flex; flex-direction: row; gap: 24px">
-      <button class="button">Entlassung</button>
-      <button class="button">Behandlung</button>
-      <button class="button">Operation</button>
+<div class="patient-information">
+  <mat-card class="card" style="width: 50%; display: flex;">
+    <div>
+      <div style="display: flex; flex-direction: row; justify-content: space-between">
+        <h1 class="patient-details-title">Behandlungsplan</h1>
+        <mat-button-toggle-group [(value)]="wholeTimeBehandlungsplan" class="toggle-button-group" (click)="wholeTimeBehandlungsplanChanged()">
+          <mat-button-toggle class="toggle-button" [value]="true">Gesamt</mat-button-toggle>
+          <mat-button-toggle class="toggle-button" style="border-color: #4395BB" [value]="false">Heute</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <app-behandlungsplan-tabelle [massnahmen]="massnahmen"/>
+    </div>
+  </mat-card>
+  <mat-card class="card" style="width: 50%; display: flex;">
+    <div>
+      <div style="display: flex; flex-direction: row; justify-content: space-between">
+        <h1 class="patient-details-title">Behandlungen</h1>
+        <button mat-icon-button class="icon-button" (click)="openAddBehandlungDialog()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <app-behandlungen-tabelle [behandlungen]="behandlungen"/>
+    </div>
+  </mat-card>
+</div>
+<div>
+  <mat-card class="card" style="display: flex;">
+    <div>
+      <div style="display: flex; flex-direction: row; justify-content: space-between">
+        <h1 class="patient-details-title">Operationen</h1>
+        <button mat-icon-button class="icon-button" (click)="openNewOperationPage()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <app-operationen-tabelle [operationen]="operationen"/>
     </div>
   </mat-card>
 </div>

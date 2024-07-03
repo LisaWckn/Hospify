@@ -22,7 +22,7 @@ import { PatientDetailsComponent } from './components/body/patient-details/patie
 import { IconTextComponent } from './components/icon-text/icon-text.component';
 import {MatIcon} from "@angular/material/icon";
 import { DiagnosticFindingComponent } from './components/body/diagnostic-finding/diagnostic-finding.component';
-import {MatIconButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import { AddPatientComponent } from './components/body/admitting-patient/add-patient/add-patient.component';
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {FormsModule} from "@angular/forms";
@@ -35,6 +35,13 @@ import {MatInput, MatInputModule} from "@angular/material/input";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {HttpClientModule} from "@angular/common/http";
+import { NewOperationComponent } from './components/body/new-operation/new-operation.component';
+import { BehandlungsplanTabelleComponent } from './components/body/behandlungsplan-tabelle/behandlungsplan-tabelle.component';
+import { BehandlungenTabelleComponent } from './components/body/behandlungen-tabelle/behandlungen-tabelle.component';
+import { OperationenTabelleComponent } from './components/body/operationen-tabelle/operationen-tabelle.component';
+import { PatientEntlassenComponent } from './components/body/patient-entlassen/patient-entlassen.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import { AddBehandlungComponent } from './components/body/add-behandlung/add-behandlung.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +54,13 @@ import {HttpClientModule} from "@angular/common/http";
     DiagnosticFindingComponent,
     AddPatientComponent,
     AdmittingExistingPatientComponent,
-    AdmittingNewPatientComponent
+    AdmittingNewPatientComponent,
+    NewOperationComponent,
+    BehandlungsplanTabelleComponent,
+    BehandlungenTabelleComponent,
+    OperationenTabelleComponent,
+    PatientEntlassenComponent,
+    AddBehandlungComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +93,9 @@ import {HttpClientModule} from "@angular/common/http";
     MatDatepickerToggle,
     MatDatepicker,
     MatDatepickerInput,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatButton
   ],
   providers: [
     provideAnimationsAsync()

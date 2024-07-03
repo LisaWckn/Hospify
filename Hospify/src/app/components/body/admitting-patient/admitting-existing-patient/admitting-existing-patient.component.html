@@ -1,4 +1,5 @@
-<div style="display: flex; flex-direction: row; gap: 48px">
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="!loading" style="display: flex; flex-direction: row; gap: 48px">
   <div style="width: 50%">
     <h2 class="title">Patient</h2>
     <mat-form-field style="width: 100%; margin-top: 12px">
@@ -11,7 +12,7 @@
     </mat-form-field>
 
     <h5 style="margin-top: 0">Geburtsdatum:</h5>
-    <p>{{selectedPatient.geburtsdatum}}</p>
+    <p>{{selectedPatient.geburtsdatum.toLocaleDateString()}}</p>
 
     <h5 style="margin-top: 0">Krankenversicherungsnummer:</h5>
     <p>{{selectedPatient.krankenversicherungsnummer}}</p>

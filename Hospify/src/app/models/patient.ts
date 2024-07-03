@@ -4,7 +4,7 @@ export interface Patient {
   name: string;
   geschlecht: string;
   blutgruppe: string;
-  geburtsdatum: string;
+  geburtsdatum: Date;
   adresse: string;
   kontakttelefon: string;
   verstorben: boolean;

@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.card {
+  padding: 24px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: none;
+  flex-grow: 1;
+}
+
+.patient-details-title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}

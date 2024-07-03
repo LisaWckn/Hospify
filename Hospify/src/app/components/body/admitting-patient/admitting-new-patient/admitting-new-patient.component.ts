@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Abteilung} from "../../../../models/abteilung";
 import {DummyMethods} from "../../../../services/dummyMethods";
 import {Ausstattung} from "../../../../models/ausstattung";
@@ -7,6 +7,7 @@ import {Location} from "@angular/common";
 import {MAT_DATE_LOCALE, provideNativeDateAdapter} from "@angular/material/core";
 import {Patient} from "../../../../models/patient";
 import {Ort} from "../../../../models/ort";
+import {SqlQueriesService} from "../../../../services/sql-queries.service";
 
 @Component({
   selector: 'app-admitting-new-patient',
@@ -15,15 +16,16 @@ import {Ort} from "../../../../models/ort";
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'de-DE' }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdmittingNewPatientComponent {
+export class AdmittingNewPatientComponent implements OnInit{
   bloodtypes : string[] = ["unbekannt","0-", "0+", "A-", "A+", "B-", "B+", "AB-", "AB+"];
 
-  newPatient: Patient = {name: "",plz:0, geschlecht: "", blutgruppe: "unbekannt", geburtsdatum: "", adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
+  newPatient: Patient = {name: "",plz:0, geschlecht: "", blutgruppe: "unbekannt", geburtsdatum: new Date(), adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
   street = "";
   houseNumber = 0;
   place: Ort = {plz:"", ort:""};
 
-  departments: Abteilung[] = DummyMethods.getAllDepartments();
+  departments: Abteilung[] = [];
+  departmentNames: {abteilungsID: number, beschreibung:string}[] = [];
   selectedDepartmentID: number = 0;
 
   equipment: Ausstattung = {beatmungsgeraet: false, iv_drip: false, herzmonitor:false, extragross:false}
@@ -31,7 +33,32 @@ export class AdmittingNewPatientComponent {
   bed: Bett|undefined;
   errorMessage = false;
 
-  constructor(private location: Location) {}
+  constructor(private location: Location, private sqlQueriesService: SqlQueriesService) {}
+
+  ngOnInit(){
+    this.departmentNames = [];
+    this.loadDepartments();
+  }
+
+  async loadDepartments(){
+    try{
+      this.departments = await this.sqlQueriesService.getAllDepartments();
+      this.loadDepartmentNames();
+    }catch(error){
+      console.error("Error loading departments:", error);
+    }
+  }
+
+  async loadDepartmentNames(){
+    for(let dep of this.departments){
+      try{
+        let fachrichtung = (await this.sqlQueriesService.getFachrichtungByID(dep.fachrichtungsID))[0];
+        this.departmentNames.push({abteilungsID:dep.abteilungsID, beschreibung:fachrichtung.beschreibung});
+      }catch (error){
+        console.error("Error loading fachrichtung: ", error);
+      }
+    }
+  }
 
   findFreeBed(){
     this.bed = DummyMethods.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);

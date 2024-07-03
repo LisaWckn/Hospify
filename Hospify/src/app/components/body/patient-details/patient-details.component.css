@@ -25,16 +25,30 @@
   margin: 0;
 }
 
-.button {
-  flex-grow: 1;
-  background-color: #4395BB;
-  border: 0;
-  border-radius: 16px;
-  padding: 16px 8px;
-  color: #def8fd;
-  font-size: medium;
+.icon-button {
+  background-color: white; /* Dein gewünschter Hex-Wert */
+  color: #4395BB; /* Farbe des Icons */
 }
 
-.button:hover {
-  background-color: #3e88a8;
+/* Optional: Falls du den Hover-Effekt ebenfalls anpassen möchtest */
+.icon-button:hover {
+  background-color: #def8fd; /* Ein etwas dunklerer Hex-Wert */
+}
+
+.toggle-button-group {
+  width: fit-content;
+  background-color: #def8fd;
+  border-color: #4395BB;
+  border-radius: 16px;
+}
+
+.toggle-button {
+  background-color: #def8fd;
+  color: #4395BB;
+}
+
+.mat-button-toggle-checked {
+  background-color: #4395BB !important;
+  color: white !important;
+  --mat-standard-button-toggle-selected-state-text-color: white;
 }

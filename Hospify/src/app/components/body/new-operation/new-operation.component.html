@@ -1,0 +1,17 @@
+<mat-card class="card">
+  <div>
+    <h1 class="patient-details-title">Operation buchen</h1>
+    <h5 style="margin-top: 0">Datum:</h5>
+    <mat-form-field style="width: 100%">
+      <mat-label>Datum</mat-label>
+      <input matInput [matDatepicker]="datePicker">
+      <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
+    <mat-checkbox>Dringend</mat-checkbox>
+    <mat-form-field style="width: 100%; margin-top: 12px">
+      <mat-label>OP Saal</mat-label>
+      <input required matInput name="name" placeholder="Name">
+    </mat-form-field>
+  </div>
+</mat-card>
