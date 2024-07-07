@@ -19,7 +19,6 @@ export class AdmittingExistingPatientComponent implements OnInit{
   patients : Patient[] = [];
   selectedPatient : Patient = this.patients[0];
   departments: Abteilung[] = [];
-  departmentNames: {abteilungsID: number, beschreibung:string}[] = [];
   selectedDepartmentID: number = 0;
 
   equipment: Ausstattung = {beatmungsgeraet: false, iv_drip: false, herzmonitor:false, extragross:false}
@@ -30,7 +29,6 @@ export class AdmittingExistingPatientComponent implements OnInit{
   constructor(private location: Location, private sqlQueriesService: SqlQueriesService) {}
 
   ngOnInit() {
-    this.departmentNames = [];
     this.loadPatients();
     this.loadDepartments();
   }
@@ -49,25 +47,13 @@ export class AdmittingExistingPatientComponent implements OnInit{
   async loadDepartments(){
     try{
       this.departments = await this.sqlQueriesService.getAllDepartments();
-      this.loadDepartmentNames();
     }catch(error){
       console.error("Error loading departments:", error);
     }
   }
 
-  async loadDepartmentNames(){
-    for(let dep of this.departments){
-      try{
-        let fachrichtung = (await this.sqlQueriesService.getFachrichtungByID(dep.fachrichtungsID))[0];
-        this.departmentNames.push({abteilungsID:dep.abteilungsID, beschreibung:fachrichtung.beschreibung});
-      }catch (error){
-        console.error("Error loading fachrichtung: ", error);
-      }
-    }
-  }
-
-  findFreeBed() {
-    this.bed = DummyMethods.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
+  async findFreeBed() {
+    this.bed = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
 
     if(this.bed == undefined){
       this.errorMessage = true;
@@ -77,10 +63,13 @@ export class AdmittingExistingPatientComponent implements OnInit{
     }
   }
 
-  admitPatient(){
-    DummyMethods.addStayForPatient(this.selectedPatient!.patientenID!);
-    DummyMethods.addBedForPatient(this.selectedPatient!.patientenID!, this.bed!.bettID);
+  async admitPatient(){
+    try{
+      await this.sqlQueriesService.insertAufenthalt(this.selectedPatient!.patientenID!, new Date(), this.bed!);
+      this.location.back();
+    }catch (error){
+      console.error("Error insert stay:", error);
+    }
 
-    this.location.back();
   }
 }

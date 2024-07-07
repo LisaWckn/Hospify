@@ -25,7 +25,7 @@ import { DiagnosticFindingComponent } from './components/body/diagnostic-finding
 import {MatButton, MatIconButton} from "@angular/material/button";
 import { AddPatientComponent } from './components/body/admitting-patient/add-patient/add-patient.component';
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import { AdmittingExistingPatientComponent } from './components/body/admitting-patient/admitting-existing-patient/admitting-existing-patient.component';
@@ -62,41 +62,42 @@ import { AddBehandlungComponent } from './components/body/add-behandlung/add-beh
     PatientEntlassenComponent,
     AddBehandlungComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatCard,
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatCell,
-    MatHeaderRow,
-    MatRow,
-    MatRowDef,
-    MatHeaderRowDef,
-    MatCellDef,
-    MatHeaderCellDef,
-    MatIcon,
-    MatIconButton,
-    MatButtonToggleGroup,
-    MatButtonToggle,
-    FormsModule,
-    MatFormField,
-    MatSelect,
-    MatOption,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatInput,
-    MatInputModule,
-    MatRadioGroup,
-    MatRadioButton,
-    MatDatepickerToggle,
-    MatDatepicker,
-    MatDatepickerInput,
-    HttpClientModule,
-    MatDialogModule,
-    MatButton
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MatCard,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRow,
+        MatRow,
+        MatRowDef,
+        MatHeaderRowDef,
+        MatCellDef,
+        MatHeaderCellDef,
+        MatIcon,
+        MatIconButton,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        FormsModule,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatFormFieldModule,
+        MatCheckboxModule,
+        MatInput,
+        MatInputModule,
+        MatRadioGroup,
+        MatRadioButton,
+        MatDatepickerToggle,
+        MatDatepicker,
+        MatDatepickerInput,
+        HttpClientModule,
+        MatDialogModule,
+        MatButton,
+        ReactiveFormsModule
+    ],
   providers: [
     provideAnimationsAsync()
   ],

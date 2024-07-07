@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Operation} from "../../../models/operation";
 import {Mitarbeiter} from "../../../models/mitarbeiter";
 import {SqlQueriesService} from "../../../services/sql-queries.service";
-import {markAsyncChunksNonInitial} from "@angular-devkit/build-angular/src/tools/webpack/utils/async-chunks";
 import {Komplikation} from "../../../models/komplikation";
 
 @Component({
@@ -26,7 +25,6 @@ export class OperationenTabelleComponent implements OnChanges{
     this.chirurgen = [];
     this.erfolgreich = [];
     if (this.operationen) {
-      console.log(this.operationen);
       this.loadChirurgen();
       this.loadErfolg();
     }
@@ -35,14 +33,14 @@ export class OperationenTabelleComponent implements OnChanges{
   async loadChirurgen(){
     for(let op of this.operationen){
       try{
-        let mitarbeiter : Mitarbeiter[] = await this.sqlQueryService.getMitarbeiterByOpID(op.opID);
+        let mitarbeiter : Mitarbeiter[] = await this.sqlQueryService.getMitarbeiterByOpID(op.opID!);
         let chirurg = mitarbeiter[0];
         for(let m of mitarbeiter){
           if(m.arztnummer != null){
             chirurg = m;
           }
         }
-        this.chirurgen.push({opID: op.opID, chirurg: chirurg});
+        this.chirurgen.push({opID: op.opID!, chirurg: chirurg});
       }catch (error) {
         console.error('Error loading patients:', error);
       }
@@ -52,14 +50,14 @@ export class OperationenTabelleComponent implements OnChanges{
   async loadErfolg(){
     for(let op of this.operationen){
       try{
-        let komplikationen : Komplikation[] = await this.sqlQueryService.getAllKomplikationenByOpID(op.opID);
+        let komplikationen : Komplikation[] = await this.sqlQueryService.getAllKomplikationenByOpID(op.opID!);
         let erfolg = true;
         for(let komp of komplikationen){
           if(komp.lebensbedrohlich){
             erfolg = false;
           }
         }
-        this.erfolgreich.push({opID: op.opID, erfolg: erfolg});
+        this.erfolgreich.push({opID: op.opID!, erfolg: erfolg});
       }catch (error) {
         console.error('Error loading patients:', error);
       }
@@ -67,10 +65,17 @@ export class OperationenTabelleComponent implements OnChanges{
   }
 
   getOpZeitraum(op: Operation){
-    return op.startzeit.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year:"numeric"}) + " "
-      + op.startzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-      + " - " + op.endzeit.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year:"numeric"}) + " "
-    + op.endzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    if(op.endzeit != undefined){
+      return op.startzeit.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year:"numeric"}) + " "
+        + op.startzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        + " - " + op.endzeit.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year:"numeric"}) + " "
+        + op.endzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }else{
+      return op.startzeit.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year:"numeric"}) + " "
+        + op.startzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        + " - in Arbeit";
+    }
+
   }
 
   getChirurg(op : Operation){

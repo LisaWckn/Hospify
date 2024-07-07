@@ -14,7 +14,6 @@ export class PatientsListComponent implements OnInit{
   displayedColumns: string[] = ['patientenID', 'name', 'geschlecht', 'geburtsdatum', 'kontakttelefon' ,'krankenversicherungsnummer'];
   dataSource : Patient[] = [];
   loading: boolean = true; // Initial auf true setzen
-  stays : Stay[] = [];
 
   constructor(private router: Router, private sqlQueriesService: SqlQueriesService) {}
 

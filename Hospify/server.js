@@ -44,6 +44,35 @@ app.post('/query', async (req, res) => {
   }
 });
 
+app.post('/insert', async (req, res) => {
+  let connection;
+  console.log("insert");
+
+  try {
+    const query = req.body.query;
+    if (!query) {
+      return res.status(400).send('INPUT string is required');
+    }
+
+    console.log('Executing insert:', query);
+    connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(query, [], { autoCommit: true });
+    console.log('Insert result:', result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Database connection error');
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });

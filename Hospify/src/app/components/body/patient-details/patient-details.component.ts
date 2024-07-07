@@ -105,6 +105,7 @@ export class PatientDetailsComponent implements OnInit{
   async loadOperations(){
     try{
       this.operationen = await this.sqlQueriesService.getAllOperationsByPatientID(this.patientID);
+
     }catch (error) {
       console.error('Error loading patients:', error);
     }
@@ -121,7 +122,7 @@ export class PatientDetailsComponent implements OnInit{
   }
 
   openNewOperationPage(){
-    this.router.navigate(["/new-operation"]);
+    this.router.navigate(["/new-operation", this.patient.patientenID]);
   }
 
   openEntlassenDialog(): void {

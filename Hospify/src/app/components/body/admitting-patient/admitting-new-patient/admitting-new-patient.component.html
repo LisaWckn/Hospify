@@ -89,8 +89,8 @@
     <mat-form-field style="width: 100%; margin-top: 12px">
       <mat-label>Abteilung</mat-label>
       <mat-select [(value)]="selectedDepartmentID">
-        @for (department of departmentNames; track department) {
-          <mat-option [value]="department.abteilungsID">{{department.abteilungsID}} ({{department.beschreibung}})</mat-option>
+        @for (department of departments; track department) {
+          <mat-option [value]="department.abteilungsID">{{department.abteilungsID}}</mat-option>
         }
       </mat-select>
     </mat-form-field>

@@ -25,7 +25,6 @@ export class AdmittingNewPatientComponent implements OnInit{
   place: Ort = {plz:"", ort:""};
 
   departments: Abteilung[] = [];
-  departmentNames: {abteilungsID: number, beschreibung:string}[] = [];
   selectedDepartmentID: number = 0;
 
   equipment: Ausstattung = {beatmungsgeraet: false, iv_drip: false, herzmonitor:false, extragross:false}
@@ -36,32 +35,19 @@ export class AdmittingNewPatientComponent implements OnInit{
   constructor(private location: Location, private sqlQueriesService: SqlQueriesService) {}
 
   ngOnInit(){
-    this.departmentNames = [];
     this.loadDepartments();
   }
 
   async loadDepartments(){
     try{
       this.departments = await this.sqlQueriesService.getAllDepartments();
-      this.loadDepartmentNames();
     }catch(error){
       console.error("Error loading departments:", error);
     }
   }
 
-  async loadDepartmentNames(){
-    for(let dep of this.departments){
-      try{
-        let fachrichtung = (await this.sqlQueriesService.getFachrichtungByID(dep.fachrichtungsID))[0];
-        this.departmentNames.push({abteilungsID:dep.abteilungsID, beschreibung:fachrichtung.beschreibung});
-      }catch (error){
-        console.error("Error loading fachrichtung: ", error);
-      }
-    }
-  }
-
-  findFreeBed(){
-    this.bed = DummyMethods.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
+  async findFreeBed(){
+    this.bed = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
 
     if(this.bed == undefined){
       this.errorMessage = true;

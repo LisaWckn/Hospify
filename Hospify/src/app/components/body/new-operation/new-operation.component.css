@@ -17,3 +17,31 @@
   font-family: adlam, sans-serif;
   margin: 0;
 }
+
+.button {
+  width: 100%;
+  background-color: #4395BB;
+  border: 0;
+  border-radius: 16px;
+  padding: 16px;
+  color: #def8fd;
+  font-size: medium;
+}
+
+.icon-button {
+  background-color: white; /* Dein gewünschter Hex-Wert */
+  color: #4395BB; /* Farbe des Icons */
+}
+
+/* Optional: Falls du den Hover-Effekt ebenfalls anpassen möchtest */
+.icon-button:hover {
+  background-color: #def8fd; /* Ein etwas dunklerer Hex-Wert */
+}
+
+.error {
+  color: red;
+  width: 100%;
+  text-align: center;
+  margin: 8px 0;
+  font-size: small;
+}
