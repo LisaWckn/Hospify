@@ -53,13 +53,20 @@ export class AdmittingExistingPatientComponent implements OnInit{
   }
 
   async findFreeBed() {
-    this.bed = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
+    try{
+      let bedArray : Bett[] = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
 
-    if(this.bed == undefined){
-      this.errorMessage = true;
-    }else{
-      this.bedFound = true;
-      this.errorMessage = false;
+      if(bedArray.length == 0){
+        this.errorMessage = true;
+      }else{
+        this.bedFound = true;
+        this.errorMessage = false;
+
+        this.bed = bedArray[0];
+        console.log(this.bed);
+      }
+    }catch (error){
+      console.error("Error finding bed:", error);
     }
   }
 

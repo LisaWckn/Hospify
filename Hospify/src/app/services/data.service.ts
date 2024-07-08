@@ -7,20 +7,19 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 })
 export class DataService {
 
-  private queryUrl = 'http://localhost:3000/query';
-  private insertUrl = 'http://localhost:3000/insert';
+  private apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) { }
 
   executeQuery(query: string): Observable<any> {
     console.log("SQL Query: \n" + query);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.post<any>(this.queryUrl, { query }, { headers });
+    return this.http.post<any>(`${this.apiUrl}/executeQuery`, { query: query });
   }
 
-  executeInsert(query: string) {
+  executeInsert(query: string): Observable<any> {
     console.log("SQL Insert Query: \n" + query);
-    const res = this.http.post<any>(this.insertUrl, { query });
+    const res = this.http.post<any>(`${this.apiUrl}/executeInsert`, { query: query});
     console.log(res);
+    return res;
   }
 }

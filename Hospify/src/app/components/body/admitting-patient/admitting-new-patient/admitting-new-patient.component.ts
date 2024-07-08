@@ -17,9 +17,9 @@ import {SqlQueriesService} from "../../../../services/sql-queries.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdmittingNewPatientComponent implements OnInit{
-  bloodtypes : string[] = ["unbekannt","0-", "0+", "A-", "A+", "B-", "B+", "AB-", "AB+"];
+  bloodtypes : string[] = ["0-", "0+", "A-", "A+", "B-", "B+", "AB-", "AB+"];
 
-  newPatient: Patient = {name: "",plz:0, geschlecht: "", blutgruppe: "unbekannt", geburtsdatum: new Date(), adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
+  newPatient: Patient = {name: "",plz:"", geschlecht: "Maennlich", blutgruppe: "0-", geburtsdatum: new Date(0), adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: "Gesetzlich"};
   street = "";
   houseNumber = 0;
   place: Ort = {plz:"", ort:""};
@@ -46,28 +46,39 @@ export class AdmittingNewPatientComponent implements OnInit{
     }
   }
 
-  async findFreeBed(){
-    this.bed = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
+  async findFreeBed() {
+    try{
+      let bedArray : Bett[] = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
 
-    if(this.bed == undefined){
-      this.errorMessage = true;
-    }else{
-      this.bedFound = true;
-      this.errorMessage = false;
+      if(bedArray.length == 0){
+        this.errorMessage = true;
+      }else{
+        this.bedFound = true;
+        this.errorMessage = false;
+
+        this.bed = bedArray[0];
+        console.log(this.bed);
+      }
+    }catch (error){
+      console.error("Error finding bed:", error);
     }
   }
 
-  admitPatient(){
+  async admitPatient(){
     if(this.newPatient.name != "" && this.newPatient.geschlecht != ""){
-      if(!DummyMethods.findPlace(this.place.plz)){
-        DummyMethods.createPlace(this.place);
+      let placeArray = await this.sqlQueriesService.findOrt(this.place.plz)
+      if(placeArray.length == 0){
+        await this.sqlQueriesService.insertOrt(this.place);
       }
-      let patientID = DummyMethods.addPatient(this.newPatient);
-      if(patientID!= -1){
-        DummyMethods.addPlaceToPatient(patientID, this.place.plz);
-        DummyMethods.addStayForPatient(0);
-        DummyMethods.addBedForPatient(0, this.bed!.bettID);
-      }
+
+      this.newPatient.adresse = this.street +" " +  this.houseNumber;
+      this.newPatient.plz = this.place.plz;
+      let patientID = await this.sqlQueriesService.getMaxPatientID() as number;
+      patientID++;
+
+      await this.sqlQueriesService.insertPatient(this.newPatient);
+
+      await this.sqlQueriesService.insertAufenthalt(patientID, new Date(), this.bed!);
 
       this.location.back();
     }else{

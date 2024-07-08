@@ -18,6 +18,7 @@ import {Eingriff} from "../models/eingriff";
 import {SqlPatientService} from "./sql-sub-services/sql-patient.service";
 import {SqlMitarbeiterService} from "./sql-sub-services/sql-mitarbeiter.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
+import {Ort} from "../models/ort";
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,10 @@ export class SqlQueriesService {
 
   async getPatientByID(patientenID: number){
     return this.sqlPatientService.getPatientByID(patientenID);
+  }
+
+  async getMaxPatientID(){
+    return this.sqlPatientService.getMaxPatientID();
   }
 
   async insertPatient(patient: Patient){
@@ -59,7 +64,8 @@ export class SqlQueriesService {
   }
 
   async getCurrentStayByPatientID(patientenID: number){
-    const query: string = 'SELECT * FROM Aufenthalt WHERE startzeitpunkt < DATE \'2024-01-15\' AND (endzeitpunkt > DATE \'2024-01-15\' OR endzeitpunkt IS NULL) AND patientenID = ' + patientenID;
+    const currentDate = (new Date()).toLocaleDateString('sv-SE');
+    const query: string = 'SELECT * FROM Aufenthalt WHERE startzeitpunkt < DATE \''+currentDate+'\' AND (endzeitpunkt > DATE \''+currentDate+'\' OR endzeitpunkt IS NULL) AND patientenID = ' + patientenID;
     try {
       const response = await this.dataService.executeQuery(query).toPromise();
       return response.map((row: any[]) => ({
@@ -161,7 +167,7 @@ export class SqlQueriesService {
     let startzeit = behandlungsplan.startzeit.toLocaleDateString('sv-SE');
     let endzeit = behandlungsplan.endzeit?.toLocaleDateString('sv-SE');
 
-    const query: string = 'SELECT * FROM BEHANDLUNG WHERE patientenID='+patientenID+' AND zeitpunkt>= DATE \''+startzeit+'\' AND zeitpunkt<= DATE \''+endzeit+'\'';
+    const query: string = 'SELECT * FROM BEHANDLUNG WHERE patientenID='+patientenID; //+' AND zeitpunkt>= DATE \''+startzeit+'\' AND zeitpunkt<= DATE \''+endzeit+'\'';
     try {
       const response = await this.dataService.executeQuery(query).toPromise();
       return response.map((row: any[]) => ({
@@ -176,8 +182,10 @@ export class SqlQueriesService {
   }
 
   async getTodayBehandlungen(patientenID:number){
-
-    const query: string = 'SELECT * FROM BEHANDLUNG WHERE patientenID='+patientenID+' AND zeitpunkt>= DATE \'2024-01-15\' AND zeitpunkt<= DATE \'2024-01-16\' ';
+    const currentDate = new Date();
+    const tomorrowDate = new Date(currentDate.getTime());
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    const query: string = 'SELECT * FROM BEHANDLUNG WHERE patientenID='+patientenID+' AND zeitpunkt>= DATE \''+currentDate.toLocaleDateString('sv-SE')+'\' AND zeitpunkt<= DATE \''+tomorrowDate.toLocaleDateString('sv-SE')+'\' ';
     try {
       const response = await this.dataService.executeQuery(query).toPromise();
       return response.map((row: any[]) => ({
@@ -192,7 +200,8 @@ export class SqlQueriesService {
   }
 
   async getCurrentBehandlungsplan(patientenID: number){
-    const query: string = 'SELECT * FROM BEHANDLUNGSPLAN WHERE startzeit < DATE \'2024-01-15\' AND patientenID='+patientenID;
+    const currentDate = new Date().toLocaleDateString('sv-SE');
+    const query: string = 'SELECT * FROM BEHANDLUNGSPLAN WHERE startzeit < DATE \''+currentDate+'\' AND patientenID='+patientenID;
     try {
       const response = await this.dataService.executeQuery(query).toPromise();
       return response.map((row: any[]) => ({
@@ -207,8 +216,60 @@ export class SqlQueriesService {
     }
   }
 
-  async insertBehandlung(patientenID: number, massnahmen: Massnahme[]){
-    //TODO
+  async getMaxBehandlungsID(){
+    const query: string = 'SELECT MAX(behandlungsID) FROM BEHANDLUNG';
+    try {
+      return await this.dataService.executeQuery(query).toPromise();
+    } catch (error) {
+      console.error('Error executing query:', error);
+      return [];
+    }
+  }
+
+  async insertBehandlung(behandlung: Behandlung){
+    const dateString = behandlung.zeitpunkt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
+    const timeString = behandlung.zeitpunkt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const zeitpunkt= dateString + " " + timeString;
+
+    const query: string = 'INSERT INTO BEHANDLUNG (behandlungsID, patientenID, zeitpunkt) ' +
+      'VALUES ('+behandlung.behandlungsID+', '+behandlung.patientenID+', \''+zeitpunkt+'\')';
+
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
+  }
+
+  async insertBehandlungZuMassnahme(behandlungsID: number, massnahmenID: number){
+    const query: string = 'INSERT INTO behandlungZuMassnahme (behandlungsID, massnahmenID) ' +
+      'VALUES ('+behandlungsID+', '+massnahmenID+')';
+
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
+  }
+
+  async insertBehandlungZuMitarbeiter(behandlungsID: number, mitarbeiterID: number){
+    const query: string = 'INSERT INTO behandlungZuMitarbeiter (mitarbeiterID, behandlungsID) ' +
+      'VALUES ('+mitarbeiterID+', '+behandlungsID+')';
+
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   async getMitarbeiterByBehandlungsID(behandlungsID : number){
@@ -250,10 +311,7 @@ export class SqlQueriesService {
   async getMaxOperationID(){
     const query: string = 'SELECT MAX(opID) FROM Operation';
     try {
-      const response = await this.dataService.executeQuery(query).toPromise();
-      const opId: number = response as number;
-      console.log("Max op id:" + response);
-      return response;
+      return await this.dataService.executeQuery(query).toPromise();
     } catch (error) {
       console.error('Error executing query:', error);
       return [];
@@ -261,58 +319,67 @@ export class SqlQueriesService {
   }
 
   async insertOperation(op: Operation){
-    const dateString = op.startzeit.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
-    const timeString = op.startzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    let dateString = op.startzeit.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
+    let timeString = op.startzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     const startzeit= dateString + " " + timeString;
-    const query: string = 'INSERT INTO OPERATION (opID, patientenID, opSaalID, startzeit, dringend, Ursache) ' +
-      'VALUES ('+op.opID+', '+op.patientenID+', '+op.opSaalID+', \''+startzeit+'\', '+this.boolToInt(op.dringend)+', \''+op.Ursache+'\')';
 
-    const params = {
-      opID: op.opID,
-      patientenID: op.patientenID,
-      opSaalID: op.opSaalID,
-      startzeit: startzeit,
-      dringend: this.boolToInt(op.dringend),
-      Ursache: "abc"
-    };
+    dateString = op.endzeit.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
+    timeString = op.endzeit.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const endzeit= dateString + " " + timeString;
 
-    return this.dataService.executeInsert(query);
+    const query: string = 'INSERT INTO OPERATION (opID, patientenID, opSaalID, startzeit, endzeit, dringend, Ursache) ' +
+      'VALUES ('+op.opID+', '+op.patientenID+', '+op.opSaalID+', \''+startzeit+'\', \''+endzeit+'\', '+this.boolToInt(op.dringend)+', \''+op.Ursache+'\')';
+
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   async insertMitarbeiterZuOperation(opID: number, mitarbeiter: Mitarbeiter){
     const query: string = 'INSERT INTO mitarbeiterZuOperation (mitarbeiterID, opID) ' +
-      'VALUES (:mitarbeiterID, :opID)';
+      'VALUES ('+mitarbeiter.mitarbeiterID+', '+opID+')';
 
-    const params = {
-      mitarbeiterID: mitarbeiter.mitarbeiterID,
-      opID: opID
-    };
-
-    return this.dataService.executeInsert(query);
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   async insertOperationZuKomplikation(opID: number, komplikation: Komplikation){
     const query: string = 'INSERT INTO operationZuKomplikation (komplikationsID, opID) ' +
-      'VALUES (:komplikationsID, :opID)';
+      'VALUES ('+komplikation.komplikationsID+', '+opID+')';
 
-    const params = {
-      komplikationsID: komplikation.komplikationsID,
-      opID: opID
-    };
-
-    return this.dataService.executeInsert(query);
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   async insertOperationZuEingriff(opID: number, eingriff: Eingriff){
     const query: string = 'INSERT INTO operationZuEingriff (opID, eingriffID) ' +
-      'VALUES (:opID, :eingriffID)';
+      'VALUES ('+opID+', '+eingriff.eingriffID+')';
 
-    const params = {
-      opID: opID,
-      eingriffID: eingriff.eingriffID
-    };
-
-    return this.dataService.executeInsert(query);
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   async getAllKomplikationenByOpID(opID: number){
@@ -441,6 +508,35 @@ export class SqlQueriesService {
     }
   }
 
+  async findOrt(plz: string){
+    try {
+      const query: string = 'SELECT * FROM ORT WHERE plz='+plz;
+
+      const response = await this.dataService.executeQuery(query).toPromise();
+      return response.map((row: any[]) => ({
+        plz: row[0],
+        ort: row[1]
+      } as Ort));
+    } catch (error) {
+      console.error('Error executing query:', error);
+      return [];
+    }
+  }
+
+  async insertOrt(ort: Ort) {
+    const query: string = 'INSERT INTO ORT (plz, ort) ' +
+      'VALUES (\''+ort.plz+'\', \''+ort.ort+'\')';
+
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
+  }
+
   async findBedConfigurations(ausstattung: Ausstattung) {
     const query: string = 'SELECT ausstattungsID FROM ausstattung WHERE beatmungsgeraet='+this.boolToInt(ausstattung.beatmungsgeraet)+' AND iv_drip='+this.boolToInt(ausstattung.iv_drip)+' AND herzmonitor='+this.boolToInt(ausstattung.herzmonitor)+' AND extragross='+this.boolToInt(ausstattung.extragross);
     try {
@@ -482,33 +578,44 @@ export class SqlQueriesService {
   }
 
   async insertAufenthalt(patientenID: number, startzeitpunkt: Date, bett: Bett){
-    const aufenthaltID : number = await this.getMaxAufenthaltID();
+    let aufenthaltID : number = await this.getMaxAufenthaltID() as number;
+    aufenthaltID++;
 
     await this.insertAufenthaltZuBett(bett.bettID, aufenthaltID, startzeitpunkt);
 
+    const dateString = startzeitpunkt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
+    const timeString = startzeitpunkt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const startzeit= dateString + " " + timeString;
+
     const query: string = 'INSERT INTO AUFENTHALT (aufenthaltID, patientenID, startzeitpunkt) ' +
-      'VALUES (:komplikationsID, :opID, TO_TIMESTAMP(:startzeitpunkt, \'YYYY-MM-DD HH24:MI:SS\'))';
+      'VALUES ('+aufenthaltID+', '+patientenID+', \''+startzeit+'\')';
 
-    const params = {
-      aufenthaltID: aufenthaltID,
-      patientenID: patientenID,
-      startzeitpunkt: startzeitpunkt.toISOString().slice(0, 19).replace('T', ' ')
-    };
-
-    return this.dataService.executeInsert(query);
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   async insertAufenthaltZuBett(bettID: number, aufenthaltID: number, startzeitpunkt:Date){
+    const dateString = startzeitpunkt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
+    const timeString = startzeitpunkt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const startzeit= dateString + " " + timeString;
+
     const query: string = 'INSERT INTO aufenthaltZuBett (bettID, aufenthaltID, startzeitpunkt) ' +
-      'VALUES (:bettID, :aufenthaltID, TO_TIMESTAMP(:startzeitpunkt, \'YYYY-MM-DD HH24:MI:SS\'))';
+      'VALUES ('+bettID+', '+aufenthaltID+', \''+startzeit+'\')';
 
-    const params = {
-      bettID: bettID,
-      aufenthaltID: aufenthaltID,
-      startzeitpunkt: startzeitpunkt.toISOString().slice(0, 19).replace('T', ' ')
-    };
-
-    return this.dataService.executeInsert(query);
+    this.dataService.executeInsert(query).subscribe(
+      result => {
+        console.log('Rows Inserted:', result.rowsAffected);
+      },
+      error => {
+        console.error('Error executing insert:', error);
+      }
+    );
   }
 
   boolToInt(bool: boolean) : number {

@@ -8,15 +8,15 @@
 
       <h5 style="margin-top: 0">Geschlecht:</h5>
       <mat-radio-group required [(ngModel)]="newPatient.geschlecht" [value]="newPatient.geschlecht">
-        <mat-radio-button value="m">Männlich</mat-radio-button>
-        <mat-radio-button value="w">Weiblich</mat-radio-button>
-        <mat-radio-button value="d">Nicht feststellbar</mat-radio-button>
+        <mat-radio-button value="Maennlich">Männlich</mat-radio-button>
+        <mat-radio-button value="Weiblich">Weiblich</mat-radio-button>
+        <mat-radio-button value="Divers">Nicht feststellbar</mat-radio-button>
       </mat-radio-group>
 
       <h5>Blutgruppe:</h5>
       <mat-form-field style="width: 100%">
         <mat-label>Blutgruppe</mat-label>
-        <mat-select [(value)]="selectedDepartmentID">
+        <mat-select required [(value)]="newPatient.blutgruppe">
           @for (bloodtype of bloodtypes; track bloodtype) {
             <mat-option [value]="bloodtype">{{bloodtype}}</mat-option>
           }
@@ -26,7 +26,7 @@
       <h5 style="margin-top: 0">Gebrutsdatum:</h5>
       <mat-form-field style="width: 100%">
         <mat-label>Geburtsdatum</mat-label>
-        <input matInput [matDatepicker]="picker">
+        <input matInput [(ngModel)]="newPatient.geburtsdatum" [matDatepicker]="picker">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -56,7 +56,7 @@
       <h5 style="margin-top: 0">Kontakt:</h5>
       <mat-form-field style="width: 100%">
         <mat-label>Kontakttelefon</mat-label>
-        <input matInput type="number" name="kontakttelefon" placeholder="Kontakttelefon" [(ngModel)]="newPatient.kontakttelefon">
+        <input matInput name="kontakttelefon" placeholder="Kontakttelefon" [(ngModel)]="newPatient.kontakttelefon">
       </mat-form-field>
 
       <h5 style="margin-top: 0">Verstorben:</h5>
@@ -79,8 +79,9 @@
 
       <h5 style="margin-top: 0">Krankenkassenstatus:</h5>
       <mat-radio-group [(ngModel)]="newPatient.krankenkassenstatus">
-        <mat-radio-button value="1">Ja</mat-radio-button>
-        <mat-radio-button value="2">Nein</mat-radio-button>
+        <mat-radio-button value="Privat">Privat</mat-radio-button>
+        <mat-radio-button value="Gesetzlich">Gesetzlich</mat-radio-button>
+        <mat-radio-button value="Selbstzahler">Selbstzahler</mat-radio-button>
       </mat-radio-group>
   </div>
 
@@ -105,6 +106,13 @@
 
       <button class="button" style="margin-top: 24px" (click)="findFreeBed()">Freies Bett finden</button>
       <p *ngIf="errorMessage" class="error">Kein freies Bett mit diesen Anforderungen verfügbar!</p>
+    </div>
+    <div *ngIf="bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
+      <h5 style="margin-top: 0">Bett ID:</h5>
+      <p>{{bed?.bettID}}</p>
+
+      <h5 style="margin-top: 0">Raum ID:</h5>
+      <p>{{bed?.raumID}}</p>
     </div>
   </div>
 

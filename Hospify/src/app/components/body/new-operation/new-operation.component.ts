@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 import {MAT_DATE_LOCALE, provideNativeDateAdapter} from "@angular/material/core";
 import {Operationssaal} from "../../../models/operationssaal";
 import {SqlQueriesService} from "../../../services/sql-queries.service";
@@ -48,7 +49,7 @@ export class NewOperationComponent implements OnInit{
 
   errorMessage = false;
 
-  constructor(private route: ActivatedRoute, private sqlQueriesService: SqlQueriesService) {}
+  constructor(private location: Location, private route: ActivatedRoute, private sqlQueriesService: SqlQueriesService) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(params => {
@@ -188,29 +189,42 @@ export class NewOperationComponent implements OnInit{
         this.errorMessage = false;
         const dateTimeString = `${this.currentDate.toLocaleDateString('en-CA')}T${this.currentTime}:00`;
         let startzeit = new Date(dateTimeString);
+        let endzeit = this.addMinutes(startzeit, this.duration);
         try{
           let opID = (await this.sqlQueriesService.getMaxOperationID()) as number;
           opID++;
 
-          let op:Operation = {opID: opID, patientenID: this.patientID, opSaalID: this.opSaalID, startzeit:startzeit, dringend:this.isDringed, Ursache: this.opDescription};
+          let op:Operation = {opID: opID, patientenID: this.patientID, opSaalID: this.opSaalID, startzeit:startzeit, endzeit:endzeit, dringend:this.isDringed, Ursache: this.opDescription};
 
           await this.sqlQueriesService.insertOperation(op);
 
           if(opID != -1){
             for(let eingriff of this.selectedEingriffe){
-              //await this.sqlQueriesService.insertOperationZuEingriff(opID, eingriff);
+              await this.sqlQueriesService.insertOperationZuEingriff(opID, eingriff);
             }
             for(let komp of this.selectedKomplikationen){
-              //await this.sqlQueriesService.insertOperationZuKomplikation(opID, komp);
+              await this.sqlQueriesService.insertOperationZuKomplikation(opID, komp);
             }
             for(let mitarbeiter of this.selectedMitarbeiter){
-              //await this.sqlQueriesService.insertMitarbeiterZuOperation(opID, mitarbeiter);
+              await this.sqlQueriesService.insertMitarbeiterZuOperation(opID, mitarbeiter);
             }
           }
+
+          this.location.back();
         }catch(error){
           console.error("Error inserting operation." ,error);
         }
       }
     }
+  }
+
+  addMinutes(date: Date, minutes: number): Date {
+    // Erstelle eine Kopie des Datumsobjekts, um das Original nicht zu verändern
+    const newDate = new Date(date.getTime());
+
+    // Füge die Minuten hinzu
+    newDate.setMinutes(newDate.getMinutes() + minutes);
+
+    return newDate;
   }
 }

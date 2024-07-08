@@ -3,7 +3,7 @@ export interface Operation{
   patientenID: number;
   opSaalID: number;
   startzeit: Date;
-  endzeit?: Date;
+  endzeit: Date;
   dringend: boolean;
   Ursache: string;
 }

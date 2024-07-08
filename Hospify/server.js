@@ -1,14 +1,13 @@
-const oracledb = require('oracledb');
 const express = require('express');
-const cors = require('cors');
+const oracledb = require('oracledb');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-app.use(cors());
-app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(bodyParser.json());
+app.use(cors());
 
 const dbConfig = {
   user: 'ndreier',
@@ -16,62 +15,53 @@ const dbConfig = {
   connectString: '(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=rs03-db-inf-min.ad.fh-bielefeld.de)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SID=orcl)))'
 };
 
-oracledb.initOracleClient({ libDir: 'C:\\oracle\\instantclient_23_4' });
+oracledb.initOracleClient({}); // Initialisieren Sie den Oracle Client
 
-app.post('/query', async (req, res) => {
+app.post('/executeQuery', async (req, res) => {
+  const query = req.body.query;
   let connection;
+  console.log();
+  console.log(query);
 
   try {
-    const query = req.body.query;
-    if (!query) {
-      return res.status(400).send('Query string is required');
-    }
-
     connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(query);
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Database connection error');
+    res.status(500).send(err.message);
   } finally {
     if (connection) {
       try {
         await connection.close();
       } catch (err) {
-        console.error(err);
+        console.error('Error closing connection:', err);
       }
     }
   }
 });
 
-app.post('/insert', async (req, res) => {
+app.post('/executeInsert', async (req, res) => {
+  const { query } = req.body;
   let connection;
-  console.log("insert");
+  console.log();
+  console.log(query);
 
   try {
-    const query = req.body.query;
-    if (!query) {
-      return res.status(400).send('INPUT string is required');
-    }
-
-    console.log('Executing insert:', query);
     connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(query, [], { autoCommit: true });
-    console.log('Insert result:', result);
+    res.json({ rowsAffected: result.rowsAffected });
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Database connection error');
+    res.status(500).send(err.message);
   } finally {
     if (connection) {
       try {
         await connection.close();
       } catch (err) {
-        console.error(err);
+        console.error('Error closing connection:', err);
       }
     }
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

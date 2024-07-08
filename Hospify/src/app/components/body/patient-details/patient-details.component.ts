@@ -11,6 +11,7 @@ import {Operation} from "../../../models/operation";
 import {MatDialog} from "@angular/material/dialog";
 import {PatientEntlassenComponent} from "../patient-entlassen/patient-entlassen.component";
 import {AddBehandlungComponent} from "../add-behandlung/add-behandlung.component";
+import {Stay} from "../../../models/stay";
 
 @Component({
   selector: 'app-patient-details',
@@ -27,7 +28,7 @@ export class PatientDetailsComponent implements OnInit{
   behandlungen: Behandlung[] = [];
   operationen: Operation[] = [];
 
-  currentStay = DummyMethods.getCurrentStayByPatientID(this.patientID);
+  currentStay : Stay = {aufenthaltID:-1, patientenID: this.patientID, startzeitpunkt: new Date()};
 
   wholeTimeBehandlungsplan = true;
 
@@ -161,7 +162,18 @@ export class PatientDetailsComponent implements OnInit{
 
   async addBehandlung(result: Massnahme[]){
     try{
-      this.sqlQueriesService.insertBehandlung(this.patient.patientenID!, result);
+      let behandlungsID = (await this.sqlQueriesService.getMaxBehandlungsID()) as number;
+      behandlungsID++;
+
+      const behandlung : Behandlung = {behandlungsID: behandlungsID, patientenID: this.patient.patientenID!, zeitpunkt: new Date()};
+
+      await this.sqlQueriesService.insertBehandlung(behandlung);
+
+      for(let massnahme of result){
+        await this.sqlQueriesService.insertBehandlungZuMassnahme(behandlungsID, massnahme.massnahmenID);
+      }
+
+      await this.sqlQueriesService.insertBehandlungZuMitarbeiter(behandlungsID,7);
     }catch(error){
       console.error("Error inserting Behandlung:", error);
     }

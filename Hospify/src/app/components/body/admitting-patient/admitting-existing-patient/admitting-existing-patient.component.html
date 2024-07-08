@@ -40,6 +40,13 @@
       <button class="button" style="margin-top: 24px" (click)="findFreeBed()">Freies Bett finden</button>
       <p *ngIf="errorMessage" class="error">Kein freies Bett mit diesen Anforderungen verfügbar!</p>
     </div>
+    <div *ngIf="bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
+      <h5 style="margin-top: 0">Bett ID:</h5>
+      <p>{{bed?.bettID}}</p>
+
+      <h5 style="margin-top: 0">Raum ID:</h5>
+      <p>{{bed?.raumID}}</p>
+    </div>
   </div>
 
 </div>
