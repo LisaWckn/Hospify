@@ -1,0 +1,26 @@
+
+.patient-details-title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.button {
+  color: #4395BB !important;
+  font-family: adlam, sans-serif;
+  width: 40%;
+}
+
+.button:hover{
+  background-color: #def8fd;
+}
+
+.icon-button {
+  background-color: white; /* Dein gewünschter Hex-Wert */
+  color: #4395BB; /* Farbe des Icons */
+}
+
+/* Optional: Falls du den Hover-Effekt ebenfalls anpassen möchtest */
+.icon-button:hover {
+  background-color: #def8fd; /* Ein etwas dunklerer Hex-Wert */
+}

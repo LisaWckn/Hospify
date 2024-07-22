@@ -1,0 +1,15 @@
+<mat-card class="card">
+  <div style="display: flex;flex-direction: row; justify-content: space-between">
+    <h1 class="title">Patient aufnehmen</h1>
+    <mat-button-toggle-group [(value)]="newPatient" class="toggle-button-group">
+      <mat-button-toggle class="toggle-button" [value]="true">Neuer Patient</mat-button-toggle>
+      <mat-button-toggle class="toggle-button" style="border-color: #4395BB" [value]="false">Bestehender Patient</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div *ngIf="newPatient">
+    <app-admitting-new-patient/>
+  </div>
+  <div *ngIf="!newPatient" style="height: 100%">
+    <app-admitting-existing-patient/>
+  </div>
+</mat-card>

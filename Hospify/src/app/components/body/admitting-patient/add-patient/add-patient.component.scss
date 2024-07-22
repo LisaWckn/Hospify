@@ -1,0 +1,39 @@
+:host {
+  flex-grow: 1;
+  display: flex;
+}
+
+.card {
+  margin: 24px;
+  padding: 24px;
+  width: 100%;
+  flex-grow: 1;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.toggle-button-group {
+  width: fit-content;
+  background-color: #def8fd;
+  border-color: #4395BB;
+  border-radius: 16px;
+}
+
+.toggle-button {
+  background-color: #def8fd;
+  color: #4395BB;
+}
+
+.mat-button-toggle-checked {
+  background-color: #4395BB !important;
+  color: white !important;
+  --mat-standard-button-toggle-selected-state-text-color: white;
+}
+

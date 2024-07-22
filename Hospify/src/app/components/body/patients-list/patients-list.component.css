@@ -1,0 +1,54 @@
+:host {
+  flex-grow: 1;
+  display: flex;
+}
+
+.patient-details-title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.icon-button {
+  background-color: white;
+  color: #4395BB;
+}
+
+.icon-button:hover {
+  background-color: #def8fd;
+}
+
+.card {
+  margin: 24px;
+  padding: 24px;
+  width: 100%;
+  flex-grow: 1;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+table {
+  width: 100%;
+  background-color: transparent;
+  color: black;
+  box-shadow: none;
+}
+
+.mat-header-row {
+  border-bottom: 1px solid black;
+  border-bottom: 1px solid black;
+  color: black;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+  color: black;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+  color: black;
+}

@@ -1,0 +1,53 @@
+<mat-card class="card">
+  <div style="display: flex; flex-direction: row; justify-content: space-between">
+    <h1 class="patient-details-title">Patienten im Haus</h1>
+    <button mat-icon-button class="icon-button" (click)="clickAddPatientButton()">
+      <mat-icon class="material-icons">add</mat-icon>
+    </button>
+  </div>
+  <div *ngIf="loading">Loading...</div>
+  <table *ngIf="!loading" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- patientenID Column -->
+    <ng-container matColumnDef="patientenID">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.patientenID}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- geschlecht Column -->
+    <ng-container matColumnDef="geschlecht">
+      <th mat-header-cell *matHeaderCellDef> Geschlecht </th>
+      <td mat-cell *matCellDef="let element"> {{element.geschlecht}} </td>
+    </ng-container>
+
+    <!-- geburtsdatum Column -->
+    <ng-container matColumnDef="geburtsdatum">
+      <th mat-header-cell *matHeaderCellDef> Geburtsdatum </th>
+      <td mat-cell *matCellDef="let element"> {{element.geburtsdatum.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year:"numeric"})}} </td>
+    </ng-container>
+
+    <!-- kontakttelefon Column -->
+    <ng-container matColumnDef="kontakttelefon">
+      <th mat-header-cell *matHeaderCellDef> Kontakttelefon </th>
+      <td mat-cell *matCellDef="let element"> {{element.kontakttelefon}} </td>
+    </ng-container>
+
+    <!-- krankenversicherungsnummer Column -->
+    <ng-container matColumnDef="krankenversicherungsnummer">
+      <th mat-header-cell *matHeaderCellDef> KV-Nummer </th>
+      <td mat-cell *matCellDef="let element"> {{element.krankenversicherungsnummer}} </td>
+    </ng-container>
+
+    <tr mat-header-row class="mat-header-row" *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="clickRow(row)"></tr>
+  </table>
+</mat-card>

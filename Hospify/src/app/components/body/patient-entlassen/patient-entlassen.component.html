@@ -1,0 +1,8 @@
+<h1 mat-dialog-title class="patient-details-title">{{ data.title }}</h1>
+<div mat-dialog-content>
+  <p style="color: black">{{ data.message }}</p>
+</div>
+<div mat-dialog-actions style="justify-content: space-evenly">
+  <button mat-button class="button" (click)="onNoClick()">Nein</button>
+  <button mat-button class="button"  (click)="onYesClick()">Ja</button>
+</div>

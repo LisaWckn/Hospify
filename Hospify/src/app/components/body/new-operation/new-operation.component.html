@@ -1,0 +1,98 @@
+<mat-card class="card">
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="!loading">
+    <h1 class="patient-details-title">Operation buchen</h1>
+    <div style="display: flex; flex-direction: row; gap: 24px">
+      <div style="width: 50%;">
+        <mat-form-field style="width: 100%; margin-top: 12px">
+          <mat-label>Datum</mat-label>
+          <input required matInput [(ngModel)]="currentDate" [matDatepicker]="datePicker">
+          <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-label>Uhrzeit</mat-label>
+          <input required matInput [(ngModel)]="currentTime" name="time" type="time">
+        </mat-form-field>
+      </div>
+      <div style="width: 50%;">
+        <mat-form-field style="width: 100%; margin-top: 12px">
+          <mat-label>OP Saal</mat-label>
+          <mat-select required [(value)]="opSaalID">
+            @for (saal of opSaele; track saal) {
+              <mat-option [value]="saal.opSaalID">{{saal.opSaalID}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="isDringed">Dringend</mat-checkbox>
+      </div>
+    </div>
+    <mat-form-field style="width: 100%" class="example-full-width">
+      <mat-label>Beschreibung</mat-label>
+      <textarea matInput [(ngModel)]="opDescription"></textarea>
+    </mat-form-field>
+    <div style="display: flex; flex-direction: row; gap: 24px;">
+      <div style="width: 33%; border-radius: 12px; border: solid 2px #def8fd; padding: 12px">
+        <h2 class="patient-details-title">Eingriff hinzufügen</h2>
+        <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center">
+          <mat-form-field style="width: 85%; margin-top: 12px">
+            <mat-label>Eingriff</mat-label>
+            <mat-select [(value)]="currentlySelectedEingriff">
+              @for (eingriff of allEingriffe; track eingriff) {
+                <mat-option [value]="eingriff.eingriffID">{{eingriff.beschreibung}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button style="margin-top: -12px" class="icon-button" (click)="addEingriffToSelected()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <ng-container>
+          <p *ngFor="let eingriff of selectedEingriffe" style="color: black">{{eingriff.beschreibung}}</p>
+        </ng-container>
+        <h4 class="patient-details-title">Dauer: {{duration}} Minuten</h4>
+      </div>
+
+      <div style="width: 33%; border-radius: 12px; border: solid 2px #def8fd; padding: 12px">
+        <h2 class="patient-details-title">Komplikation vermerken</h2>
+        <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center">
+          <mat-form-field style="width: 85%; margin-top: 12px">
+            <mat-label>Komplikation</mat-label>
+            <mat-select [(value)]="currentlySelectedKomplikation">
+              @for (komplikation of allKomplikationen; track komplikation) {
+                <mat-option [value]="komplikation.komplikationsID">{{komplikation.beschreibung}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button style="margin-top: -12px" class="icon-button" (click)="addKomplikationToSelected()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <ng-container>
+          <p *ngFor="let komplikation of selectedKomplikationen" style="color: black">{{komplikation.beschreibung}}</p>
+        </ng-container>
+      </div>
+      <div style="width: 33%; border-radius: 12px; border: solid 2px #def8fd; padding: 12px">
+        <h2 class="patient-details-title">Mitarbeiter</h2>
+        <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center">
+          <mat-form-field style="width: 85%; margin-top: 12px">
+            <mat-label>Mitarbeiter</mat-label>
+            <mat-select [(value)]="currentlySelectedMitarbeiter">
+              @for (mitarbeiter of allMitarbeiter; track mitarbeiter) {
+                <mat-option [value]="mitarbeiter.mitarbeiterID">{{mitarbeiter.name}} ({{mitarbeiter.arztart}})</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button style="margin-top: -12px" class="icon-button" (click)="addMitarbeiterToSelected()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <ng-container>
+          <p *ngFor="let mitarbeiter of selectedMitarbeiter" style="color: black">{{mitarbeiter.name}}</p>
+        </ng-container>
+      </div>
+    </div>
+    <button style="margin-top: 24px" class="button" (click)="saveOperation()">Operation speichern</button>
+    <p *ngIf="errorMessage" class="error">Daten nicht ausreichend! Erstellung der OP fehlgeschlagen.</p>
+  </div>
+</mat-card>

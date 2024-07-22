@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between
+}
+
+.title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.button {
+  background-color: #4395BB;
+  border: 0;
+  border-radius: 16px;
+  padding: 16px;
+  color: #def8fd;
+  font-size: medium;
+}
+
+.button:hover {
+  background-color: #3e88a8;
+}
+
+.error {
+  color: red;
+  width: 100%;
+  text-align: center;
+  margin: 8px 0;
+  font-size: small;
+}

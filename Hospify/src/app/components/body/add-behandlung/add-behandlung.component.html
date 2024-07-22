@@ -1,0 +1,24 @@
+<h1 mat-dialog-title class="patient-details-title">{{ data.title }}</h1>
+<div mat-dialog-content>
+  <p style="color: black">{{ data.message }}</p>
+  <p class="patient-details-title">Gewählte Maßnahmen:</p>
+  <p *ngIf="selectedMassnahmen.length == 0" style="color: black">Keine Maßnahmen gewählt.</p>
+  <ng-container *ngIf="selectedMassnahmen.length != 0">
+    <p *ngFor="let massnahme of selectedMassnahmen" style="color: black">{{massnahme.beschreibung}}</p>
+  </ng-container>
+  <p class="patient-details-title">Weitere Maßnahmen hinzufügen:</p>
+  <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center">
+    <mat-select style="width: 80%" [(value)]="currentlySelectedMassnahme">
+      @for (massnahmen of allMassnahmen; track massnahmen) {
+        <mat-option [value]="massnahmen.massnahmenID">{{massnahmen.beschreibung}}</mat-option>
+      }
+    </mat-select>
+    <button mat-icon-button class="icon-button" (click)="addMassnahmeToSelected()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
+<div mat-dialog-actions style="justify-content: space-evenly">
+  <button mat-button class="button" (click)="onNoClick()">Abbrechen</button>
+  <button mat-button class="button" [disabled]="selectedMassnahmen.length==0" (click)="onYesClick()">Bestätigen</button>
+</div>

@@ -1,0 +1,121 @@
+<div style="display: flex; flex-direction: row; gap: 48px">
+  <div style="width: 50%">
+    <h2 class="title">Patientendaten</h2>
+      <mat-form-field style="width: 100%; margin-top: 12px">
+        <mat-label>Name</mat-label>
+        <input required matInput name="name" placeholder="Name" [(ngModel)]="newPatient.name">
+      </mat-form-field>
+
+      <h5 style="margin-top: 0">Geschlecht:</h5>
+      <mat-radio-group required [(ngModel)]="newPatient.geschlecht" [value]="newPatient.geschlecht">
+        <mat-radio-button value="Maennlich">Männlich</mat-radio-button>
+        <mat-radio-button value="Weiblich">Weiblich</mat-radio-button>
+        <mat-radio-button value="Divers">Nicht feststellbar</mat-radio-button>
+      </mat-radio-group>
+
+      <h5>Blutgruppe:</h5>
+      <mat-form-field style="width: 100%">
+        <mat-label>Blutgruppe</mat-label>
+        <mat-select required [(value)]="newPatient.blutgruppe">
+          @for (bloodtype of bloodtypes; track bloodtype) {
+            <mat-option [value]="bloodtype">{{bloodtype}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <h5 style="margin-top: 0">Gebrutsdatum:</h5>
+      <mat-form-field style="width: 100%">
+        <mat-label>Geburtsdatum</mat-label>
+        <input matInput [(ngModel)]="newPatient.geburtsdatum" [matDatepicker]="picker">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <h5 style="margin-top: 0">Adresse:</h5>
+      <div style="width: 100%; display: flex; flex-direction: row; gap: 24px">
+        <mat-form-field style="width: 80%">
+          <mat-label>Straße</mat-label>
+          <input matInput name="straße" placeholder="Straße" [(ngModel)]="street">
+        </mat-form-field>
+        <mat-form-field style="width: 20%">
+          <mat-label>Hausnummer</mat-label>
+          <input matInput type="number"  name="hausnummer" placeholder="0" [(ngModel)]="houseNumber">
+        </mat-form-field>
+      </div>
+      <div style="width: 100%; display: flex; flex-direction: row; gap: 24px">
+        <mat-form-field style="width: 30%">
+          <mat-label>PLZ</mat-label>
+          <input matInput type="number" name="plz" placeholder="PLZ" [(ngModel)]="place.plz">
+        </mat-form-field>
+        <mat-form-field style="width: 70%">
+          <mat-label>Ort</mat-label>
+          <input matInput name="ort" placeholder="Ort" [(ngModel)]="place.ort">
+        </mat-form-field>
+      </div>
+
+      <h5 style="margin-top: 0">Kontakt:</h5>
+      <mat-form-field style="width: 100%">
+        <mat-label>Kontakttelefon</mat-label>
+        <input matInput name="kontakttelefon" placeholder="Kontakttelefon" [(ngModel)]="newPatient.kontakttelefon">
+      </mat-form-field>
+
+      <h5 style="margin-top: 0">Verstorben:</h5>
+      <mat-radio-group [(ngModel)]="newPatient.verstorben" [value]="newPatient.verstorben">
+        <mat-radio-button [value]="true">Ja</mat-radio-button>
+        <mat-radio-button [value]="false">Nein</mat-radio-button>
+      </mat-radio-group>
+
+      <h5>Krankenversicherungsnummer:</h5>
+      <mat-form-field style="width: 100%">
+        <mat-label>Krankenversicherungsnummer</mat-label>
+        <input matInput name="krankenversicherungsnummer" placeholder="Krankenversicherungsnummer" [(ngModel)]="newPatient.krankenversicherungsnummer">
+      </mat-form-field>
+
+      <h5 style="margin-top: 0">Gewicht:</h5>
+      <mat-form-field style="width: 100%">
+        <mat-label>Gewicht</mat-label>
+        <input matInput type="number" name="gewicht" placeholder="Gewicht" [(ngModel)]="newPatient.gewicht">
+      </mat-form-field>
+
+      <h5 style="margin-top: 0">Krankenkassenstatus:</h5>
+      <mat-radio-group [(ngModel)]="newPatient.krankenkassenstatus">
+        <mat-radio-button value="Privat">Privat</mat-radio-button>
+        <mat-radio-button value="Gesetzlich">Gesetzlich</mat-radio-button>
+        <mat-radio-button value="Selbstzahler">Selbstzahler</mat-radio-button>
+      </mat-radio-group>
+  </div>
+
+  <div style="width: 50%;">
+    <h2 class="title">Abteilung</h2>
+    <mat-form-field style="width: 100%; margin-top: 12px">
+      <mat-label>Abteilung</mat-label>
+      <mat-select [(value)]="selectedDepartmentID">
+        @for (department of departments; track department) {
+          <mat-option [value]="department.abteilungsID">{{department.abteilungsID}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <h2 class="title">Bett</h2>
+    <div *ngIf="!bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
+      <h3 style="margin: 0">Anforderungen:</h3>
+      <mat-checkbox [(ngModel)]="equipment.beatmungsgeraet">Beatmungsgerät</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.iv_drip">IV Drip</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.herzmonitor">Herzmonitor</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.extragross">Extragross</mat-checkbox>
+
+      <button class="button" style="margin-top: 24px" (click)="findFreeBed()">Freies Bett finden</button>
+      <p *ngIf="errorMessage" class="error">Kein freies Bett mit diesen Anforderungen verfügbar!</p>
+    </div>
+    <div *ngIf="bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
+      <h5 style="margin-top: 0">Bett ID:</h5>
+      <p>{{bed?.bettID}}</p>
+
+      <h5 style="margin-top: 0">Raum ID:</h5>
+      <p>{{bed?.raumID}}</p>
+    </div>
+  </div>
+
+</div>
+
+<button *ngIf="bedFound" class="button" (click)="admitPatient()">Patient aufnehmen</button>

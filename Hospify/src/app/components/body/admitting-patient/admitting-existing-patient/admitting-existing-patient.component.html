@@ -1,0 +1,54 @@
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="!loading" style="display: flex; flex-direction: row; gap: 48px">
+  <div style="width: 50%">
+    <h2 class="title">Patient</h2>
+    <mat-form-field style="width: 100%; margin-top: 12px">
+      <mat-label>Patient</mat-label>
+      <mat-select [(value)]="selectedPatient">
+        @for (patient of patients; track patient) {
+          <mat-option [value]="patient">{{patient.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <h5 style="margin-top: 0">Geburtsdatum:</h5>
+    <p>{{selectedPatient.geburtsdatum.toLocaleDateString()}}</p>
+
+    <h5 style="margin-top: 0">Krankenversicherungsnummer:</h5>
+    <p>{{selectedPatient.krankenversicherungsnummer}}</p>
+  </div>
+
+  <div style="width: 50%;">
+    <h2 class="title">Abteilung</h2>
+    <mat-form-field style="width: 100%; margin-top: 12px">
+      <mat-label>Abteilung</mat-label>
+      <mat-select [(value)]="selectedDepartmentID">
+        @for (department of departments; track department) {
+          <mat-option [value]="department.abteilungsID">{{department.abteilungsID}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <h2 class="title">Bett</h2>
+    <div *ngIf="!bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
+      <h3 style="margin: 0">Anforderungen:</h3>
+      <mat-checkbox [(ngModel)]="equipment.beatmungsgeraet">Beatmungsgerät</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.iv_drip">IV Drip</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.herzmonitor">Herzmonitor</mat-checkbox>
+      <mat-checkbox [(ngModel)]="equipment.extragross">Extragross</mat-checkbox>
+
+      <button class="button" style="margin-top: 24px" (click)="findFreeBed()">Freies Bett finden</button>
+      <p *ngIf="errorMessage" class="error">Kein freies Bett mit diesen Anforderungen verfügbar!</p>
+    </div>
+    <div *ngIf="bedFound" style="display: flex; flex-direction: column; margin: 24px 0">
+      <h5 style="margin-top: 0">Bett ID:</h5>
+      <p>{{bed?.bettID}}</p>
+
+      <h5 style="margin-top: 0">Raum ID:</h5>
+      <p>{{bed?.raumID}}</p>
+    </div>
+  </div>
+
+</div>
+
+<button *ngIf="bedFound" class="button" (click)="admitPatient()">Patient aufnehmen</button>

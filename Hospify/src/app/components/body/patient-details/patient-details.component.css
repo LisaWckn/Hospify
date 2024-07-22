@@ -1,0 +1,54 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+}
+
+.card {
+    padding: 24px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: none;
+}
+
+.patient-information {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.patient-details-title {
+  color: #4395BB;
+  font-family: adlam, sans-serif;
+  margin: 0;
+}
+
+.icon-button {
+  background-color: white; /* Dein gewünschter Hex-Wert */
+  color: #4395BB; /* Farbe des Icons */
+}
+
+/* Optional: Falls du den Hover-Effekt ebenfalls anpassen möchtest */
+.icon-button:hover {
+  background-color: #def8fd; /* Ein etwas dunklerer Hex-Wert */
+}
+
+.toggle-button-group {
+  width: fit-content;
+  background-color: #def8fd;
+  border-color: #4395BB;
+  border-radius: 16px;
+}
+
+.toggle-button {
+  background-color: #def8fd;
+  color: #4395BB;
+}
+
+.mat-button-toggle-checked {
+  background-color: #4395BB !important;
+  color: white !important;
+  --mat-standard-button-toggle-selected-state-text-color: white;
+}
