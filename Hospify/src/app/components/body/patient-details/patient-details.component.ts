@@ -13,6 +13,17 @@ import {PatientEntlassenComponent} from "../patient-entlassen/patient-entlassen.
 import {AddBehandlungComponent} from "../add-behandlung/add-behandlung.component";
 import {Stay} from "../../../models/stay";
 
+/**
+ * `PatientDetailsComponent` zeigt die Detailansicht eines Patienten, einschließlich diagnostischer Befunde, Maßnahmen, Behandlungen und Operationen.
+ *
+ * Diese Komponente ermöglicht die Ansicht und Verwaltung der Details eines Patienten, einschließlich der Möglichkeit,
+ * den Patienten zu entlassen oder neue Behandlungen hinzuzufügen. Sie verwendet Dialoge zur Bestätigung und für Eingaben.
+ *
+ * @component
+ * @selector app-patient-details
+ * @templateUrl ./patient-details.component.html
+ * @styleUrls ./patient-details.component.css
+ */
 @Component({
   selector: 'app-patient-details',
   templateUrl: './patient-details.component.html',
@@ -32,8 +43,21 @@ export class PatientDetailsComponent implements OnInit{
 
   wholeTimeBehandlungsplan = true;
 
+  /**
+   * Erzeugt eine Instanz der `PatientDetailsComponent`.
+   *
+   * @param route - Der ActivatedRoute-Dienst für den Zugriff auf Route-Parameter.
+   * @param router - Der Router-Dienst zum Navigieren zwischen Seiten.
+   * @param sqlQueriesService - Der Dienst zum Abrufen und Einfügen von Daten über SQL-Abfragen.
+   * @param dialog - Der MatDialog-Dienst zum Öffnen von Dialogen.
+   */
   constructor(private route: ActivatedRoute,private router: Router, private sqlQueriesService: SqlQueriesService, public dialog: MatDialog) { }
 
+  /**
+   * Wird beim Initialisieren der Komponente aufgerufen.
+   *
+   * Lädt die Patientendaten, Befunde, aktuellen Aufenthalt, Maßnahmen, Behandlungen und Operationen.
+   */
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(params => {
       this.patientID = +params['id'];
@@ -47,6 +71,9 @@ export class PatientDetailsComponent implements OnInit{
     this.loadOperations();
   }
 
+  /**
+   * Lädt die Patientendaten basierend auf der Patienten-ID.
+   */
   async loadPatient() {
     try {
       this.patient = (await this.sqlQueriesService.getPatientByID(this.patientID))[0];
@@ -55,6 +82,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle Befunde des Patienten.
+   */
   async loadDiagnosticFindings(){
     try {
       this.diagnosticFindings = await this.sqlQueriesService.getAllDiagnosticFindingsByPatientID(this.patientID);
@@ -63,6 +93,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt den aktuellen Aufenthalt des Patienten.
+   */
   async loadCurrentStay(){
     try{
       this.currentStay = (await this.sqlQueriesService.getCurrentStayByPatientID(this.patientID))[0];
@@ -71,6 +104,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle Maßnahmen des Patienten im Behandlungsplan.
+   */
   async loadWholeMassnahmen() {
     try{
       this.massnahmen = await this.sqlQueriesService.getCurrentBehandlungsplanElements(this.patientID);
@@ -79,6 +115,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt die heutigen Maßnahmen des Patienten.
+   */
   async loadTodayMassnahmen(){
     try{
       this.massnahmen = await this.sqlQueriesService.getCurrentBehandlungsplanElementsByTodayDate(this.patientID);
@@ -87,6 +126,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle Behandlungen des Patienten im Behandlungsplan.
+   */
   async loadWholeBehandlungen() {
     try{
       this.behandlungen = await this.sqlQueriesService.getCurrentBehandlungen(this.patientID);
@@ -95,6 +137,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt die heutigen Behandlungen des Patienten.
+   */
   async loadTodayBehandlungen() {
     try{
       this.behandlungen = await this.sqlQueriesService.getTodayBehandlungen(this.patientID);
@@ -103,6 +148,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle Operationen des Patienten.
+   */
   async loadOperations(){
     try{
       this.operationen = await this.sqlQueriesService.getAllOperationsByPatientID(this.patientID);
@@ -112,6 +160,9 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Ändert den Behandlungsplan je nach Auswahl, um entweder den gesamten Behandlungsplan oder nur die heutigen Maßnahmen anzuzeigen.
+   */
   wholeTimeBehandlungsplanChanged(){
     if(this.wholeTimeBehandlungsplan){
       this.loadWholeMassnahmen();
@@ -122,10 +173,16 @@ export class PatientDetailsComponent implements OnInit{
     }
   }
 
+  /**
+   * Öffnet die Seite zum Hinzufügen einer neuen Operation.
+   */
   openNewOperationPage(){
     this.router.navigate(["/new-operation", this.patient.patientenID]);
   }
 
+  /**
+   * Öffnet einen Bestätigungsdialog, um den Patienten zu entlassen.
+   */
   openEntlassenDialog(): void {
     const dialogRef = this.dialog.open(PatientEntlassenComponent, {
       width: '30%',
@@ -143,6 +200,9 @@ export class PatientDetailsComponent implements OnInit{
     });
   }
 
+  /**
+   * Öffnet einen Dialog zum Hinzufügen einer neuen Behandlung.
+   */
   openAddBehandlungDialog(): void {
     const dialogRef = this.dialog.open(AddBehandlungComponent, {
       width: '50%',
@@ -160,6 +220,11 @@ export class PatientDetailsComponent implements OnInit{
     });
   }
 
+  /**
+   * Fügt eine neue Behandlung hinzu und verknüpft diese mit den ausgewählten Maßnahmen.
+   *
+   * @param result - Die ausgewählten Maßnahmen, die mit der neuen Behandlung verknüpft werden sollen.
+   */
   async addBehandlung(result: Massnahme[]){
     try{
       let behandlungsID = (await this.sqlQueriesService.getMaxBehandlungsID()) as number;
@@ -178,7 +243,9 @@ export class PatientDetailsComponent implements OnInit{
       console.error("Error inserting Behandlung:", error);
     }
   }
-
+  /**
+   * Entlässt den Patienten, indem der aktuelle Aufenthalt aktualisiert wird.
+   */
   async entlassePatient(){
     try{
       await this.sqlQueriesService.updateStay(this.currentStay.aufenthaltID);

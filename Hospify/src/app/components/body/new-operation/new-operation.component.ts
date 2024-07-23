@@ -12,6 +12,18 @@ import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
 import {Operation} from "../../../models/operation";
 
+/**
+ * `NewOperationComponent` ist eine Komponente zum Erstellen neuer Operationen.
+ *
+ * Diese Komponente ermöglicht das Hinzufügen neuer Operationen zu einem Patienten.
+ *
+ * @component
+ * @selector app-new-operation
+ * @templateUrl ./new-operation.component.html
+ * @styleUrls ./new-operation.component.css
+ * @providers [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'de-DE' }]
+ * @changeDetection ChangeDetectionStrategy.OnPush
+ */
 @Component({
   selector: 'app-new-operation',
   templateUrl: './new-operation.component.html',
@@ -49,8 +61,19 @@ export class NewOperationComponent implements OnInit{
 
   errorMessage = false;
 
+  /**
+   * Erzeugt eine Instanz von `NewOperationComponent`.
+   *
+   * @param location - Der Standortdienst zum Navigieren.
+   * @param route - Der Dienst zum Abrufen der Route-Parameter.
+   * @param sqlQueriesService - Der Dienst zum Abrufen von Daten über SQL-Abfragen.
+   */
   constructor(private location: Location, private route: ActivatedRoute, private sqlQueriesService: SqlQueriesService) {}
 
+  /**
+   * Wird beim Initialisieren der Komponente aufgerufen.
+   * Lädt die erforderlichen Daten für die Auswahl von Operationssaal, Eingriffen, Komplikationen und Mitarbeitern.
+   */
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(params => {
       this.patientID = +params['id'];
@@ -63,6 +86,9 @@ export class NewOperationComponent implements OnInit{
     this.loadMitarbeiter();
   }
 
+  /**
+   * Lädt alle verfügbaren Eingriffe aus dem Backend.
+   */
   async loadEingriffe(){
     try {
       this.allEingriffe = await this.sqlQueriesService.getAllEingriffe();
@@ -74,6 +100,9 @@ export class NewOperationComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle verfügbaren Operationssäle aus dem Backend.
+   */
   async loadOpSaele(){
     try{
       this.opSaele = await this.sqlQueriesService.getAllAvailableOpSaele();
@@ -83,6 +112,9 @@ export class NewOperationComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle verfügbaren Mitarbeiter basierend auf der Fachrichtung des Patienten.
+   */
   async loadMitarbeiter(){
     try{
       const fachrichtungsID = (await this.sqlQueriesService.getFachrichtungByPatientID(this.patientID))[0].fachrichtungsID;
@@ -101,6 +133,13 @@ export class NewOperationComponent implements OnInit{
     }
   }
 
+  /**
+   * Lädt alle verfügbaren Komplikationen aus dem Backend.
+   *
+   * Diese Methode ruft alle Komplikationen ab und setzt die aktuell ausgewählte Komplikation
+   * auf die erste in der Liste. Das `loading`-Flag wird auf `false` gesetzt, nachdem die
+   * Daten geladen wurden.
+   */
   async loadKomplikationen(){
     try {
       this.allKomplikationen = await this.sqlQueriesService.getAllKomplikationen();
@@ -112,6 +151,13 @@ export class NewOperationComponent implements OnInit{
     }
   }
 
+  /**
+   * Fügt den aktuell ausgewählten Eingriff zur Liste der ausgewählten Eingriffe hinzu
+   * und entfernt ihn aus der Liste der verfügbaren Eingriffe.
+   *
+   * Aktualisiert die ID des aktuell ausgewählten Eingriffs und berechnet die Dauer der
+   * Operation neu.
+   */
   addEingriffToSelected() {
     let indexToDelete = -1;
     for (let i=0; i<this.allEingriffe.length;i++){
@@ -128,6 +174,12 @@ export class NewOperationComponent implements OnInit{
     this.calculateDuration();
   }
 
+  /**
+   * Fügt die aktuell ausgewählte Komplikation zur Liste der ausgewählten Komplikationen
+   * hinzu und entfernt sie aus der Liste der verfügbaren Komplikationen.
+   *
+   * Aktualisiert die ID der aktuell ausgewählten Komplikation.
+   */
   addKomplikationToSelected(){
     let indexToDelete = -1;
     for (let i=0; i<this.allKomplikationen.length;i++){
@@ -143,6 +195,12 @@ export class NewOperationComponent implements OnInit{
     this.currentlySelectedKomplikation = this.allKomplikationen.at(0)!.komplikationsID;
   }
 
+  /**
+   * Fügt den aktuell ausgewählten Mitarbeiter zur Liste der ausgewählten Mitarbeiter hinzu
+   * und entfernt ihn aus der Liste der verfügbaren Mitarbeiter.
+   *
+   * Aktualisiert die ID des aktuell ausgewählten Mitarbeiters.
+   */
   addMitarbeiterToSelected(){
     let indexToDelete = -1;
     for (let i=0; i<this.allMitarbeiter.length;i++){
@@ -158,6 +216,9 @@ export class NewOperationComponent implements OnInit{
     this.currentlySelectedMitarbeiter = this.allMitarbeiter.at(0)!.mitarbeiterID;
   }
 
+  /**
+   * Berechnet die Dauer der Operation basierend auf der Zeitabschätzung der ausgewählten Eingriffe.
+   */
   calculateDuration(){
     this.duration = 0;
     for(let eingriff of this.selectedEingriffe){
@@ -165,6 +226,14 @@ export class NewOperationComponent implements OnInit{
     }
   }
 
+  /**
+   * Speichert die neue Operation im Backend.
+   *
+   * Überprüft, ob alle erforderlichen Felder ausgefüllt sind. Falls nicht, wird eine
+   * Fehlermeldung angezeigt. Andernfalls werden die Operation, die Eingriffe, Komplikationen
+   * und Mitarbeiter im Backend gespeichert. Die Benutzeroberfläche wird anschließend zur
+   * vorherigen Seite zurückgeführt.
+   */
   async saveOperation(){
     if(this.opSaalID == -1 || this.selectedEingriffe.length == 0 || this.selectedMitarbeiter.length < 5){
       this.errorMessage = true;
@@ -218,6 +287,13 @@ export class NewOperationComponent implements OnInit{
     }
   }
 
+  /**
+   * Fügt die angegebene Anzahl von Minuten zum gegebenen Datum hinzu.
+   *
+   * @param {Date} date - Das Datum, zu dem die Minuten hinzugefügt werden sollen.
+   * @param {number} minutes - Die Anzahl der Minuten, die hinzugefügt werden sollen.
+   * @return {Date} - Ein neues Datum, das die hinzugefügten Minuten enthält.
+   */
   addMinutes(date: Date, minutes: number): Date {
     // Erstelle eine Kopie des Datumsobjekts, um das Original nicht zu verändern
     const newDate = new Date(date.getTime());
