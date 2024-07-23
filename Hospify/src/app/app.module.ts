@@ -43,6 +43,14 @@ import { PatientEntlassenComponent } from './components/body/patient-entlassen/p
 import {MatDialogModule} from "@angular/material/dialog";
 import { AddBehandlungComponent } from './components/body/add-behandlung/add-behandlung.component';
 
+/**
+ * Das Hauptmodul der Anwendung.
+ * Hier werden alle Komponenten, Module und Dienste deklariert,
+ * die in der Anwendung verwendet werden.
+ *
+ * @NgModule Dekorator kennzeichnet eine Klasse als Angular-Modul und konfiguriert
+ * das Angular-Modulsystem.
+ */
 @NgModule({
   declarations: [
     AppComponent,
