@@ -13,7 +13,7 @@ app.use(cors());
 // Datenbank-Konfigurationsdetails
 const dbConfig = {
   user: 'ndreier',
-  password: 'kekseBackvereinEV',
+  password: 'froehlichBuntesPasswort',
   connectString: '(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=rs03-db-inf-min.ad.fh-bielefeld.de)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SID=orcl)))'
 };
 
