@@ -1,3 +1,9 @@
 # Hospify
-Hospify
-TEST TEST TEST TEST
+Projekt Hospify
+
+erstellt von:
+
+Lisa Weickenmeier
+Nils Dreier
+Daniel Wellmann
+Keno Gäbe
