@@ -9,6 +9,10 @@ export class SqlPatientService {
 
   constructor(private dataService: DataService) { }
 
+  /**
+   * Holt alle Patienten aus der Datenbank.
+   * @return - Ein Array von Patienten. Jeder Patient wird als `Patient`-Objekt gemappt.
+   */
   async getAllPatients(): Promise<Patient[]> {
     const query: string = 'SELECT * FROM PATIENT';
     try {
@@ -20,6 +24,11 @@ export class SqlPatientService {
     }
   }
 
+  /**
+   * Holt alle aktuell anwesenden Patienten aus der Datenbank.
+   * Ein Patient gilt als anwesend, wenn der Aufenthalt begonnen hat und entweder noch nicht beendet ist oder kein Enddatum hat.
+   * @return - Ein Array von Patienten, die derzeit anwesend sind. Jeder Patient wird als `Patient`-Objekt gemappt.
+   */
   async getAllPresentPatients(): Promise<Patient[]> {
     const currentDate = new Date().toLocaleDateString('sv-SE');
     //Korrekter Query: SELECT * FROM Patient WHERE patientenID IN (SELECT patientenID FROM Aufenthalt WHERE startzeitpunkt < CURRENT_DATE AND (endzeitpunkt > CURRENT_DATE OR endzeitpunkt IS NULL))
@@ -33,6 +42,11 @@ export class SqlPatientService {
     }
   }
 
+  /**
+   * Holt einen Patienten anhand der Patienten-ID aus der Datenbank.
+   * @param patientenID - Die ID des Patienten, der abgefragt werden soll.
+   * @return - Ein Array mit einem einzelnen Patienten, der als `Patient`-Objekt gemappt wird.
+   */
   async getPatientByID(patientenID: number){
     const query: string = 'SELECT * FROM PATIENT WHERE patientenID=' + patientenID;
     try {
@@ -44,6 +58,10 @@ export class SqlPatientService {
     }
   }
 
+  /**
+   * Holt die höchste Patienten-ID aus der Datenbank.
+   * @return - Die höchste Patienten-ID.
+   */
   async getMaxPatientID(){
     const query: string = 'SELECT MAX(patientenID) FROM PATIENT';
     try {
@@ -54,6 +72,10 @@ export class SqlPatientService {
     }
   }
 
+  /**
+   * Fügt einen neuen Patienten in die Datenbank ein.
+   * @param patient - Das `Patient`-Objekt, das die Informationen des neuen Patienten enthält.
+   */
   async insertPatient(patient: Patient){
     let patientenID :number = await this.getMaxPatientID() as number;
     patientenID++;
@@ -74,6 +96,11 @@ export class SqlPatientService {
     );
   }
 
+  /**
+   * Wandelt die Antwort der Datenbankabfrage in ein Array von `Patient`-Objekten um.
+   * @param response - Die Antwort der Datenbankabfrage, die als Array von Zeilen vorliegt.
+   * @return - Ein Array von `Patient`-Objekten, die die Zeilen der Antwort repräsentieren.
+   */
   patientMapping(response: any){
     return response.map((row: any[]) => ({
       patientenID: row[0],
@@ -91,6 +118,11 @@ export class SqlPatientService {
     } as Patient));
   }
 
+  /**
+   * Konvertiert einen boolean-Wert in eine Ganzzahl (1 für `true`, 0 für `false`).
+   * @param bool - Der boolean-Wert, der konvertiert werden soll.
+   * @return - Die Ganzzahl, die den boolean-Wert repräsentiert.
+   */
   boolToInt(bool: boolean) : number {
     if(bool){
       return 1;

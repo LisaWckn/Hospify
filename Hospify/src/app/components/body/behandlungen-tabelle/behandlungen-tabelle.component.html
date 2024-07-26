@@ -1,9 +1,6 @@
 <table mat-table [dataSource]="behandlungen" class="mat-elevation-z8">
 
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
-
-  <!-- massnahmen Column -->
+  <!-- Massnahmen Spalte -->
   <ng-container matColumnDef="massnahmen">
     <th mat-header-cell *matHeaderCellDef> Massnahmen </th>
     <td mat-cell *matCellDef="let element">
@@ -17,13 +14,13 @@
     </td>
   </ng-container>
 
-  <!-- zeitpunkt Column -->
+  <!-- Zeitpunkt Spalte -->
   <ng-container matColumnDef="zeitpunkt">
     <th mat-header-cell *matHeaderCellDef> Zeitpunkt </th>
     <td mat-cell *matCellDef="let element"> {{getTimestampToLocaleFormat(element.zeitpunkt)}} </td>
   </ng-container>
 
-  <!-- mitarbeiter Column -->
+  <!-- Mitarbeiter Spalte -->
   <ng-container matColumnDef="mitarbeiter">
     <th mat-header-cell *matHeaderCellDef> Mitarbeiter </th>
     <td mat-cell *matCellDef="let element">

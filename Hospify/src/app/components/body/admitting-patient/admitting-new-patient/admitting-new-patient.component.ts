@@ -9,6 +9,12 @@ import {Patient} from "../../../../models/patient";
 import {Ort} from "../../../../models/ort";
 import {SqlQueriesService} from "../../../../services/sql-queries.service";
 
+/**
+ * Komponente zum Aufnehmen eines neuen Patienten.
+ *
+ * Diese Komponente ermöglicht die Eingabe und Speicherung der Daten eines neuen Patienten,
+ * einschließlich der Suche nach einem freien Bett basierend auf der ausgewählten Abteilung und Ausstattung.
+ */
 @Component({
   selector: 'app-admitting-new-patient',
   templateUrl: './admitting-new-patient.component.html',
@@ -32,12 +38,26 @@ export class AdmittingNewPatientComponent implements OnInit{
   bed: Bett|undefined;
   errorMessage = false;
 
+  /**
+   * Erzeugt eine neue Instanz der `AdmittingNewPatientComponent`-Klasse.
+   *
+   * @param {Location} location - Der Dienst zum Navigieren.
+   * @param {SqlQueriesService} sqlQueriesService - Der Dienst zum Abrufen von Daten aus der Datenbank.
+   */
   constructor(private location: Location, private sqlQueriesService: SqlQueriesService) {}
 
+  /**
+   * Initialisiert die Komponente, indem die Liste der Abteilungen geladen wird.
+   */
   ngOnInit(){
     this.loadDepartments();
   }
 
+  /**
+   * Lädt die Liste der Abteilungen.
+   *
+   * Diese Methode ruft alle Abteilungen aus der Datenbank ab und speichert sie in der `departments`-Liste.
+   */
   async loadDepartments(){
     try{
       this.departments = await this.sqlQueriesService.getAllDepartments();
@@ -46,6 +66,12 @@ export class AdmittingNewPatientComponent implements OnInit{
     }
   }
 
+  /**
+   * Sucht nach einem freien Bett basierend auf der ausgewählten Abteilung und Ausstattung.
+   *
+   * Diese Methode ruft alle verfügbaren Betten ab, die den Anforderungen entsprechen,
+   * und speichert das erste gefundene Bett.
+   */
   async findFreeBed() {
     try{
       let bedArray : Bett[] = await this.sqlQueriesService.findFreeBed(this.departments.find(d=> d.abteilungsID == this.selectedDepartmentID)!, this.equipment);
@@ -64,6 +90,16 @@ export class AdmittingNewPatientComponent implements OnInit{
     }
   }
 
+  /**
+   * Nimmt den neuen Patienten auf, indem die Patientendaten und der Aufenthalt gespeichert werden.
+   *
+   * Diese Methode speichert die Daten des neuen Patienten und den zugehörigen Aufenthalt
+   * in der Datenbank.
+   * @component
+   * @selector app-admitting-new-patient
+   * @templateUrl ./admitting-new-patient.component.html
+   * @styleUrls ./admitting-new-patient.component.css
+   */
   async admitPatient(){
     if(this.newPatient.name != "" && this.newPatient.geschlecht != ""){
       let placeArray = await this.sqlQueriesService.findOrt(this.place.plz)
@@ -82,7 +118,6 @@ export class AdmittingNewPatientComponent implements OnInit{
 
       this.location.back();
     }else{
-      //TODO: Error Message
     }
   }
 }

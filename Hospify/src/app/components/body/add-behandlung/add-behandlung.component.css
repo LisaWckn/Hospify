@@ -16,11 +16,10 @@
 }
 
 .icon-button {
-  background-color: white; /* Dein gewünschter Hex-Wert */
-  color: #4395BB; /* Farbe des Icons */
+  background-color: white;
+  color: #4395BB;
 }
 
-/* Optional: Falls du den Hover-Effekt ebenfalls anpassen möchtest */
 .icon-button:hover {
-  background-color: #def8fd; /* Ein etwas dunklerer Hex-Wert */
+  background-color: #def8fd;
 }
