@@ -1,24 +1,23 @@
-import {Injectable} from '@angular/core';
-import {Patient} from "../models/patient";
-import {DataService} from "./data.service";
-import {Stay} from "../models/stay";
-import {DiagnosticFindings} from "../models/diagnostic-findings";
-import {Abteilung} from "../models/abteilung";
-import {Ausstattung} from "../models/ausstattung";
-import {Bett} from "../models/bett";
-import {Behandlungsplan} from "../models/behandlungsplan";
-import {Massnahme} from "../models/massnahme";
-import {Behandlung} from "../models/behandlung";
-import {Operation} from "../models/operation";
-import {Mitarbeiter} from "../models/mitarbeiter";
-import {Komplikation} from "../models/komplikation";
-import {Fachrichtung} from "../models/fachrichtung";
-import {Operationssaal} from "../models/operationssaal";
-import {Eingriff} from "../models/eingriff";
-import {SqlPatientService} from "./sql-sub-services/sql-patient.service";
-import {SqlMitarbeiterService} from "./sql-sub-services/sql-mitarbeiter.service";
-import {error} from "@angular/compiler-cli/src/transformers/util";
-import {Ort} from "../models/ort";
+import { Injectable } from '@angular/core';
+import { Abteilung } from "../models/abteilung";
+import { Ausstattung } from "../models/ausstattung";
+import { Behandlung } from "../models/behandlung";
+import { Behandlungsplan } from "../models/behandlungsplan";
+import { Bett } from "../models/bett";
+import { DiagnosticFindings } from "../models/diagnostic-findings";
+import { Eingriff } from "../models/eingriff";
+import { Fachrichtung } from "../models/fachrichtung";
+import { Komplikation } from "../models/komplikation";
+import { Massnahme } from "../models/massnahme";
+import { Mitarbeiter } from "../models/mitarbeiter";
+import { Operation } from "../models/operation";
+import { Operationssaal } from "../models/operationssaal";
+import { Ort } from "../models/ort";
+import { Patient } from "../models/patient";
+import { Stay } from "../models/stay";
+import { DataService } from "./data.service";
+import { SqlMitarbeiterService } from "./sql-sub-services/sql-mitarbeiter.service";
+import { SqlPatientService } from "./sql-sub-services/sql-patient.service";
 
 /**
  * Service für SQL-Abfragen und Datenoperationen.
