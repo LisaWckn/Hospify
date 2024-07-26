@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {DummyMethods} from "../../../services/dummyMethods";
 import {Router} from "@angular/router";
 import {Patient} from "../../../models/patient";
 import {SqlQueriesService} from "../../../services/sql-queries.service";
-import {Stay} from "../../../models/stay";
 
 /**
  * `PatientsListComponent` ist eine Angular-Komponente, die eine Liste von Patienten anzeigt.

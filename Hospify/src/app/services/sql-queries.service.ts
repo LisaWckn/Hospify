@@ -103,7 +103,7 @@ export class SqlQueriesService {
    * @return - Der aktuelle Aufenthalt des Patienten.
    */
   async getCurrentStayByPatientID(patientenID: number){
-    const currentDate = (new Date()).toLocaleDateString('sv-SE');
+    const currentDate =  '2024-07-09';//  (new Date()).toLocaleDateString('sv-SE');
     const query: string = 'SELECT * FROM Aufenthalt WHERE startzeitpunkt < DATE \''+currentDate+'\' AND (endzeitpunkt > DATE \''+currentDate+'\' OR endzeitpunkt IS NULL) AND patientenID = ' + patientenID;
     try {
       const response = await this.dataService.executeQuery(query).toPromise();
@@ -254,7 +254,7 @@ export class SqlQueriesService {
    * @return - Die heutigen Behandlungen des Patienten.
    */
   async getTodayBehandlungen(patientenID:number){
-    const currentDate = new Date();
+    const currentDate =  new Date( '2024-07-09' );
     const tomorrowDate = new Date(currentDate.getTime());
     tomorrowDate.setDate(tomorrowDate.getDate() + 1);
     const query: string = 'SELECT * FROM BEHANDLUNG WHERE patientenID='+patientenID+' AND zeitpunkt>= DATE \''+currentDate.toLocaleDateString('sv-SE')+'\' AND zeitpunkt<= DATE \''+tomorrowDate.toLocaleDateString('sv-SE')+'\' ';
@@ -277,7 +277,7 @@ export class SqlQueriesService {
    * @return - Der aktuelle Behandlungsplan des Patienten.
    */
   async getCurrentBehandlungsplan(patientenID: number){
-    const currentDate = new Date().toLocaleDateString('sv-SE');
+    const currentDate =  '2024-07-09';//  new Date().toLocaleDateString('sv-SE');
     const query: string = 'SELECT * FROM BEHANDLUNGSPLAN WHERE startzeit < DATE \''+currentDate+'\' AND patientenID='+patientenID;
     try {
       const response = await this.dataService.executeQuery(query).toPromise();
@@ -748,11 +748,11 @@ export class SqlQueriesService {
    */
   async findFreeBed(abteilung: Abteilung, ausstattung: Ausstattung){
     try{
-      const ausstattungsID = await this.findBedConfigurations(ausstattung);
+      const ausstattungsID = (await this.findBedConfigurations(ausstattung))[0].at(0);
 
-      const query: string = 'SELECT * FROM bett JOIN raum ON bett.raumID = raum.raumID JOIN abteilung ON abteilung.abteilungsID = raum.abteilungsID WHERE bett.ausstattungsID = '+ausstattungsID +' and abteilung.abteilungsID = '+abteilung.abteilungsID+' and einsatzbereit = 1';
+      const query: string =  'BEGIN GetAvailableBeds('+ausstattungsID+', '+abteilung.abteilungsID+', :p_cursor); END;';
 
-      const response = await this.dataService.executeQuery(query).toPromise();
+      const response = await this.dataService.executeProcedure(query).toPromise();
       return response.map((row: any[]) => ({
         bettID: row[0],
         ausstattungsID: row[1],
@@ -789,16 +789,13 @@ export class SqlQueriesService {
     let aufenthaltID : number = await this.getMaxAufenthaltID() as number;
     aufenthaltID++;
 
-    await this.insertAufenthaltZuBett(bett.bettID, aufenthaltID, startzeitpunkt);
-
     const dateString = startzeitpunkt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
     const timeString = startzeitpunkt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     const startzeit= dateString + " " + timeString;
 
-    const query: string = 'INSERT INTO AUFENTHALT (aufenthaltID, patientenID, startzeitpunkt) ' +
-      'VALUES ('+aufenthaltID+', '+patientenID+', \''+startzeit+'\')';
+    const query: string = 'BEGIN INSERTAUFENTHALT('+aufenthaltID+', '+patientenID+', \''+startzeit+'\'); END;';
 
-    this.dataService.executeInsert(query).subscribe(
+    this.dataService.executeInsertProcedure(query).subscribe(
       result => {
         console.log('Rows Inserted:', result.rowsAffected);
       },
@@ -806,6 +803,8 @@ export class SqlQueriesService {
         console.error('Error executing insert:', error);
       }
     );
+
+    await this.insertAufenthaltZuBett(bett.bettID, aufenthaltID, startzeitpunkt);
   }
 
   /**

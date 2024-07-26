@@ -82,47 +82,93 @@ app.post('/executeInsert', async (req, res) => {
   }
 });
 
-app.post('/executePLSQLBlock', async (req, res) => {
-  const { bettID } = req.body;
-
-  const plsqlQuery = `
-    BEGIN
-      DECLARE
-        v_bettID NUMBER := :bettID;
-        v_einsatzbereit NUMBER;
-      BEGIN
-        SELECT einsatzbereit INTO v_einsatzbereit FROM bett WHERE bettID = v_bettID;
-
-        IF v_einsatzbereit = 1 THEN
-          INSERT INTO bett_log (bettID, status, timestamp)
-          VALUES (v_bettID, 'Einsatzbereit', SYSDATE);
-        ELSE
-          INSERT INTO bett_log (bettID, status, timestamp)
-          VALUES (v_bettID, 'Nicht einsatzbereit', SYSDATE);
-        END IF;
-      END;
-    END;
-  `;
-
+// Function to execute the stored procedure
+async function executeStoredProcedure(query) {
   let connection;
 
   try {
     connection = await oracledb.getConnection(dbConfig);
-    await connection.execute(plsqlQuery, { bettID: bettID });
-    await connection.commit();
-    res.send('PL/SQL block executed successfully');
-  } catch (err) {
-    res.status(500).send(err.message);
+
+    const result = await connection.execute(
+      query,
+      {
+        p_cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
+      }
+    );
+
+    const resultSet = result.outBinds.p_cursor;
+    const rows = [];
+    let row;
+    while ((row = await resultSet.getRow())) {
+      rows.push(row);
+    }
+    await resultSet.close();
+
+    return rows;
+  } catch (error) {
+    console.error('Error executing procedure:', error);
+    throw error;
   } finally {
     if (connection) {
       try {
         await connection.close();
-      } catch (err) {
-        console.error('Error closing connection:', err);
+      } catch (error) {
+        console.error('Error closing connection:', error);
       }
     }
   }
+}
+
+// API endpoint to call the stored procedure
+app.post('/executeProcedure', async (req, res) => {
+  const query = req.body.query;
+
+  try {
+    const result = await executeStoredProcedure(query);
+    res.json(result);
+  } catch (err) {
+    res.status(500).send("ERROR executing: " + query +err.message);
+  }
 });
+
+// Function to execute the insert stored procedure
+async function executeInsertStoredProcedure(query) {
+  let connection;
+
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+
+    await connection.execute(
+      query
+    );
+
+    return [];
+  } catch (error) {
+    console.error('Error executing procedure:', error);
+    throw error;
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (error) {
+        console.error('Error closing connection:', error);
+      }
+    }
+  }
+}
+
+// API endpoint to call the insert stored procedure
+app.post('/executeInsertProcedure', async (req, res) => {
+  const query = req.body.query;
+
+  try {
+    const result = await executeInsertStoredProcedure(query);
+    res.json(result);
+  } catch (err) {
+    res.status(500).send("ERROR executing: " + query +err.message);
+  }
+});
+
 
 // Startet den Server
 app.listen(port, () => {

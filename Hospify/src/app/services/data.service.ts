@@ -23,6 +23,26 @@ export class DataService {
   }
 
   /**
+   * Führt eine Stored Procedure auf dem Server aus.
+   * @param query Der Query für die Stored Procedure inklusive aller Parameter.
+   * @return Ein Observable mit der Antwort des Servers.
+   */
+  executeProcedure(query: string): Observable<any> {
+    console.log("Executing Procedure: \n" + query);
+    return this.http.post<any>(`${this.apiUrl}/executeProcedure`, { query: query});
+  }
+
+  /**
+   * Führt eine Stored Procedure für ein Insert auf dem Server aus.
+   * @param query Der Query für die Stored Procedure inklusive aller Parameter.
+   * @return Ein Observable mit der Antwort des Servers.
+   */
+  executeInsertProcedure(query: string): Observable<any> {
+    console.log("Executing Procedure: \n" + query);
+    return this.http.post<any>(`${this.apiUrl}/executeInsertProcedure`, { query: query});
+  }
+
+  /**
    * Führt eine SQL-Insert-Abfrage auf dem Server aus.
    * @param query - Die SQL-Insert-Abfrage, die ausgeführt werden soll.
    * @return - Ein Observable, das die Antwort des Servers enthält. Die Antwort wird als JSON zurückgegeben
@@ -34,4 +54,5 @@ export class DataService {
     console.log(res);
     return res;
   }
+
 }

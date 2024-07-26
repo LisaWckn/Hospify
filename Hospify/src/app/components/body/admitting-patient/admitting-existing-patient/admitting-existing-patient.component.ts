@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 
 import {Patient} from "../../../../models/patient";
-import {DummyMethods} from "../../../../services/dummyMethods";
 import {Abteilung} from "../../../../models/abteilung";
 import {Ausstattung} from "../../../../models/ausstattung";
 import {Bett} from "../../../../models/bett";
