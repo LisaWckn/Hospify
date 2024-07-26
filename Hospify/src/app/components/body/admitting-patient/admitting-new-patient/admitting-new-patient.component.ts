@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Abteilung} from "../../../../models/abteilung";
-import {DummyMethods} from "../../../../services/dummyMethods";
 import {Ausstattung} from "../../../../models/ausstattung";
 import {Bett} from "../../../../models/bett";
 import {Location} from "@angular/common";

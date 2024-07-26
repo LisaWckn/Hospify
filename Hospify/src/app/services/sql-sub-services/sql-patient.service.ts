@@ -14,9 +14,9 @@ export class SqlPatientService {
    * @return - Ein Array von Patienten. Jeder Patient wird als `Patient`-Objekt gemappt.
    */
   async getAllPatients(): Promise<Patient[]> {
-    const query: string = 'SELECT * FROM PATIENT';
+    const query: string = 'BEGIN GETALLPATIENTS(:p_cursor); END;';
     try {
-      const response = await this.dataService.executeQuery(query).toPromise();
+      const response = await this.dataService.executeProcedure(query).toPromise();
       return this.patientMapping(response);
     } catch (error) {
       console.error('Error executing query:', error);
@@ -30,11 +30,11 @@ export class SqlPatientService {
    * @return - Ein Array von Patienten, die derzeit anwesend sind. Jeder Patient wird als `Patient`-Objekt gemappt.
    */
   async getAllPresentPatients(): Promise<Patient[]> {
-    const currentDate = new Date().toLocaleDateString('sv-SE');
-    //Korrekter Query: SELECT * FROM Patient WHERE patientenID IN (SELECT patientenID FROM Aufenthalt WHERE startzeitpunkt < CURRENT_DATE AND (endzeitpunkt > CURRENT_DATE OR endzeitpunkt IS NULL))
-    const query: string = 'SELECT * FROM PATIENT WHERE patientenID IN (SELECT patientenID FROM Aufenthalt WHERE startzeitpunkt < DATE \''+currentDate+'\' AND (endzeitpunkt > DATE \''+currentDate+'\' OR endzeitpunkt IS NULL))';
+    const currentDate = '2024-07-09';// new Date().toLocaleDateString('sv-SE');
+    const query: string = 'BEGIN GETALLPRESENTPATIENTS(DATE \''+currentDate+'\', :p_cursor); END;';
+
     try {
-      const response = await this.dataService.executeQuery(query).toPromise();
+      const response = await this.dataService.executeProcedure(query).toPromise();
       return this.patientMapping(response);
     } catch (error) {
       console.error('Error executing query:', error);
@@ -47,13 +47,14 @@ export class SqlPatientService {
    * @param patientenID - Die ID des Patienten, der abgefragt werden soll.
    * @return - Ein Array mit einem einzelnen Patienten, der als `Patient`-Objekt gemappt wird.
    */
-  async getPatientByID(patientenID: number){
-    const query: string = 'SELECT * FROM PATIENT WHERE patientenID=' + patientenID;
+  async getPatientByID(patientenID: number) {
+    const query: string = 'BEGIN GETPATIENTBYID('+patientenID+', :p_cursor); END;';
+
     try {
-      const response = await this.dataService.executeQuery(query).toPromise();
+      const response = await this.dataService.executeProcedure(query).toPromise();
       return this.patientMapping(response);
     } catch (error) {
-      console.error('Error executing query:', error);
+      console.error('Error executing procedure:', error);
       return [];
     }
   }
@@ -63,9 +64,9 @@ export class SqlPatientService {
    * @return - Die höchste Patienten-ID.
    */
   async getMaxPatientID(){
-    const query: string = 'SELECT MAX(patientenID) FROM PATIENT';
+    const query: string = 'BEGIN GETMAXPATIENTID(:p_cursor); END;';
     try {
-      return await this.dataService.executeQuery(query).toPromise();
+      return await this.dataService.executeProcedure(query).toPromise();
     } catch (error) {
       console.error('Error executing query:', error);
       return [];
@@ -82,11 +83,10 @@ export class SqlPatientService {
 
     const dateString = patient.geburtsdatum.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric'});
 
-    const query: string = 'INSERT INTO PATIENT (patientenID, plz, name, geschlecht, blutgruppe, geburtsdatum, adresse, kontakttelefon, verstorben, krankenversicherungsnummer, gewicht, krankenkassenstatus) ' +
-      'VALUES ('+patientenID+', \''+patient.plz+'\', \''+patient.name+'\', \''+patient.geschlecht+'\', \''+patient.blutgruppe+'\', \''+dateString+'\',' +
-      ' \''+patient.adresse+'\', \''+patient.kontakttelefon+'\', '+this.boolToInt(patient.verstorben)+', \''+patient.krankenversicherungsnummer+'\', '+patient.gewicht+', \''+patient.krankenkassenstatus+'\')';
+    const query: string = 'BEGIN INSERTPATIENT('+patientenID+', \''+patient.plz+'\', \''+patient.name+'\', \''+patient.geschlecht+'\', \''+patient.blutgruppe+'\', \''+dateString+'\',' +
+      ' \''+patient.adresse+'\', \''+patient.kontakttelefon+'\', '+this.boolToInt(patient.verstorben)+', \''+patient.krankenversicherungsnummer+'\', '+patient.gewicht+', \''+patient.krankenkassenstatus+'\'); END;';
 
-    this.dataService.executeInsert(query).subscribe(
+    this.dataService.executeInsertProcedure(query).subscribe(
       result => {
         console.log('Rows Inserted:', result.rowsAffected);
       },

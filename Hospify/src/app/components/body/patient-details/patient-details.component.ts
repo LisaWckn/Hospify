@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
-import {DummyMethods} from "../../../services/dummyMethods";
 import {Patient} from "../../../models/patient";
 import {SqlQueriesService} from "../../../services/sql-queries.service";
 import {DiagnosticFindings} from "../../../models/diagnostic-findings";
@@ -31,9 +30,8 @@ import {Stay} from "../../../models/stay";
 })
 export class PatientDetailsComponent implements OnInit{
   patientID = 1;
-  patient : Patient = DummyMethods.emptyPatient;
+  patient : Patient = {patientenID: -1, plz:"", name: "", geschlecht: "", blutgruppe: "", geburtsdatum: new Date(), adresse: "", kontakttelefon: "", verstorben: false, krankenversicherungsnummer: "", gewicht: 0, krankenkassenstatus: ""};
   routeSub: Subscription = new Subscription;
-
   diagnosticFindings: DiagnosticFindings[] = [];
   massnahmen : Massnahme[] = [];
   behandlungen: Behandlung[] = [];
